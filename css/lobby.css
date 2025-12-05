@@ -1,0 +1,420 @@
+/* --- Variáveis de Tema --- */
+:root {
+    --color-primary: #00FFFF; /* Neon Ciano */
+    --color-secondary: #0077B6; /* Azul Médio */
+    --color-dark: #000428; /* Fundo Escuro */
+    --color-darker: #000000;
+    --color-xp: #FFD700; /* Ouro */
+    --font-family: 'Arial', sans-serif;
+}
+
+/* --- Estilos Gerais e Fundo de Tela --- */
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    color: white;
+    background-color: var(--color-darker);
+    /* Simulação de Fundo Estrelado */
+    background-image: linear-gradient(135deg, var(--color-dark) 0%, #000000 100%); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 1400px;
+    height: 90vh;
+    display: grid;
+    grid-template-rows: 80px 1fr 100px;
+    grid-template-columns: 1fr;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* --- Header e Info do Usuário --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 5px var(--color-primary);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--color-primary);
+    box-shadow: 0 0 5px var(--color-primary);
+}
+
+.user-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid var(--color-xp);
+}
+
+.xp-bar-container {
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.xp-label {
+    font-size: 10px;
+    margin-right: 5px;
+    color: var(--color-xp);
+}
+
+.xp-bar-outline {
+    width: 80px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--color-xp);
+}
+
+.xp-bar-fill {
+    height: 100%;
+    background-color: var(--color-xp);
+    transition: width 0.5s ease-out;
+}
+
+.coins-display {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--color-xp);
+    margin-left: 15px;
+}
+
+.coin-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+}
+
+
+/* --- Conteúdo Principal (Grid Layout) --- */
+.game-content {
+    display: grid;
+    grid-template-columns: 200px 1fr 300px; 
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+
+/* --- Sidebar e Botões de Navegação --- */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.nav-button {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 2px solid var(--color-secondary);
+    padding: 15px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.nav-button:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 10px var(--color-primary);
+}
+
+.nav-button.active {
+    background: var(--color-secondary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 15px var(--color-primary);
+}
+
+/* --- Avatar e Plataforma Central --- */
+.avatar-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    position: relative;
+}
+
+/* Plataforma de Neon */
+.avatar-platform {
+    width: 300px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--color-primary) 5%, transparent 70%);
+    box-shadow: 0 0 30px var(--color-primary);
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+}
+
+/* Avatar - Contêiner Principal */
+.avatar-model {
+    width: 200px; 
+    height: 400px; 
+    position: relative;
+    margin: 0 auto;
+    background: none; 
+    transition: transform 0.3s ease;
+    animation: idle-breathing 5s ease-in-out infinite; 
+    z-index: 2;
+}
+
+/* --- Componentes Fixos do Avatar (CSS PURE) --- */
+
+.avatar-head {
+    width: 80px;
+    height: 80px;
+    background-color: #f7d2b2; 
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 60px;
+    z-index: 5;
+    box-shadow: 0 -10px 0 0 #333; /* Cabelo */
+}
+
+.avatar-torso {
+    width: 100px;
+    height: 120px;
+    background-color: #555; 
+    position: absolute;
+    top: 80px;
+    left: 50px;
+    border-radius: 5px 5px 20px 20px;
+    z-index: 3;
+}
+
+.avatar-legs {
+    width: 70px;
+    height: 150px;
+    background-color: #31507a; 
+    position: absolute;
+    top: 200px;
+    left: 65px;
+    z-index: 2;
+}
+
+.avatar-feet {
+    width: 80px;
+    height: 20px;
+    background-color: #fff; 
+    border-radius: 0 0 5px 5px;
+    position: absolute;
+    top: 350px;
+    left: 60px;
+    z-index: 4;
+}
+
+/* --- Elemento de Roupa Intercambiável (Jaqueta) --- */
+
+#avatar-jacket {
+    width: 120px;
+    height: 110px;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    border-radius: 5px;
+    z-index: 10;
+    transition: background-color 0.5s ease;
+}
+
+/* --- ESTILOS DE ROUPAS (CLASSES MODIFICADORAS) --- */
+
+/* 1. Jaqueta Padrão (Amarela/Dourada) */
+.default-color {
+    background-color: #FFD700; 
+    border: 3px solid #ffaa00;
+}
+
+/* 2. Jaqueta de Patrocinador (Vermelha) */
+.red-jacket-color {
+    background-color: #CC0000;
+    border: 3px solid #FF6666;
+    box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.2); 
+}
+
+/* 3. Terno de Trader (Azul Escuro/Formal) */
+.suit-up-color {
+    background-color: #1a1a40;
+    border: 3px solid #333;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 90%, 0 100%); 
+}
+
+/* --- Animações do Avatar --- */
+@keyframes idle-breathing {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.avatar-model.cheer {
+    animation: cheer-jump 0.5s ease-out;
+}
+
+@keyframes cheer-jump {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+    100% { transform: translateY(0) scale(1); }
+}
+
+/* --- Missões Diárias e Rodapé (MANTIDOS) --- */
+.missions-panel {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border: 1px solid var(--color-secondary);
+    box-shadow: 0 0 10px rgba(0, 120, 255, 0.5);
+    border-radius: 5px;
+}
+
+.missions-panel h3 {
+    text-align: center;
+    color: var(--color-primary);
+    text-shadow: 0 0 5px var(--color-primary);
+    margin-top: 0;
+    text-transform: uppercase;
+}
+
+.mission-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.mission-progress {
+    color: var(--color-xp);
+    font-weight: bold;
+}
+
+.complete-mission {
+    background: var(--color-secondary);
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.2s;
+}
+
+.complete-mission:hover {
+    background: var(--color-primary);
+    box-shadow: 0 0 5px var(--color-primary);
+}
+
+.game-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.btn-action {
+    background: var(--color-secondary);
+    color: white;
+    border: 3px solid var(--color-primary);
+    padding: 15px 40px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 0 15px var(--color-primary);
+    transition: all 0.3s;
+    text-transform: uppercase;
+}
+
+.btn-action:hover {
+    background: var(--color-primary);
+    color: var(--color-darker);
+    transform: scale(1.05);
+}
+
+.help-icon {
+    position: absolute;
+    left: 0;
+    bottom: 15px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+/* --- Modal para Inventário --- */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 100; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.8); 
+}
+
+.modal-content {
+    background-color: var(--color-dark);
+    margin: 15% auto; 
+    padding: 20px;
+    border: 2px solid var(--color-primary);
+    width: 80%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px var(--color-primary);
+    text-align: center;
+}
+
+#inventory-items {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.item-btn {
+    background: var(--color-darker);
+    color: white;
+    border: 1px solid var(--color-secondary);
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.item-btn:hover, .item-btn.active {
+    border-color: var(--color-xp);
+    box-shadow: 0 0 5px var(--color-xp);
+}
+
+.close-modal {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: var(--color-secondary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

@@ -1,0 +1,709 @@
+/* =========================================================
+   VARIÁVEIS DE TEMA
+   ========================================================= */
+:root {
+  --bg-main: #050718;
+  --bg-soft: #080c22;
+  --bg-card: rgba(9, 14, 35, 0.95);
+
+  --color-primary: #6a5cf6;   /* Roxo */
+  --color-accent: #00f2ff;    /* Ciano */
+  --color-accent-soft: #4ae9ff;
+  --color-text: #f5f5ff;
+  --color-muted: #a6b1d8;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
+  --shadow-neon: 0 0 30px rgba(0, 242, 255, 0.5);
+
+  --transition-fast: 0.2s ease-out;
+  --transition-normal: 0.3s ease-out;
+
+  --max-width: 1120px;
+}
+
+/* =========================================================
+   RESET E BASE
+   ========================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: var(--color-text);
+  background-color: var(--bg-main);
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(106, 92, 246, 0.23), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(0, 242, 255, 0.25), transparent 55%),
+    linear-gradient(135deg, #050718 0%, #02010d 55%, #050718 100%);
+  background-attachment: fixed;
+}
+
+/* Escala de fonte para acessibilidade (controlada via JS) */
+body.font-scale-0 { font-size: 16px; }
+body.font-scale-1 { font-size: 18px; }
+body.font-scale-2 { font-size: 20px; }
+
+/* Alto contraste (classe trocada pelo JS) */
+body.alto-contraste {
+  --bg-main: #000;
+  --bg-soft: #000;
+  --bg-card: #000;
+  --color-primary: #ffffff;
+  --color-accent: #ffff00;
+  --color-accent-soft: #ffff00;
+  --color-text: #ffffff;
+  --color-muted: #e0e0e0;
+  background-image: none;
+}
+
+/* Tipografia básica */
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+section {
+  padding: 72px 16px;
+}
+
+/* Container centralizado */
+section > h2,
+section > p,
+.header,
+.hero,
+.como-funciona,
+.aury-section,
+.beneficios,
+.planos,
+.feedback,
+.footer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+/* =========================================================
+   FUNDO ANIMADO DE ESTRELAS
+   ========================================================= */
+.background-stars {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(2px 2px at 20% 20%, #ffffff80, transparent),
+    radial-gradient(2px 2px at 80% 40%, #ffffff80, transparent),
+    radial-gradient(2px 2px at 10% 80%, #ffffff80, transparent),
+    radial-gradient(2px 2px at 60% 90%, #ffffff80, transparent),
+    radial-gradient(2px 2px at 30% 60%, #ffffff80, transparent);
+  background-repeat: repeat;
+  animation: stars-move 40s linear infinite;
+  opacity: 0.9;
+}
+
+@keyframes stars-move {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-200px);
+  }
+}
+
+/* =========================================================
+   BOTÕES GENÉRICOS
+   ========================================================= */
+.btn-primary,
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+    background-color var(--transition-fast), border-color var(--transition-fast),
+    color var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  box-shadow: var(--shadow-neon);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 0 40px rgba(0, 242, 255, 0.7);
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text);
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.18);
+}
+
+/* Gradient no texto (StarterCash e títulos) */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* =========================================================
+   CONTROLES DE ACESSIBILIDADE
+   ========================================================= */
+.acessibilidade-controls {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  gap: 4px;
+  z-index: 30;
+}
+
+.acessibilidade-controls button {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(5, 7, 24, 0.9);
+  color: var(--color-text);
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.acessibilidade-controls button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 0 16px rgba(0, 242, 255, 0.5);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.header {
+  position: sticky;
+  
+  top: auto;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  margin-top: 40px; /* espaço para os botões A-/A+/contraste */
+  background: radial-gradient(circle at 0% 0%, rgba(106, 92, 246, 0.5), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(0, 242, 255, 0.5), transparent 55%),
+    rgba(5, 7, 24, 0.98);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(18px);
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+/* Nome StarterCash */
+.logo-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/* Menu da header */
+.menu {
+  display: flex;
+  gap: 10px;
+}
+
+/* Botões da header com tamanho levemente maior */
+.menu .btn-primary,
+.menu .btn-outline {
+  padding-inline: 18px;
+  padding-block: 9px;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: center;
+  padding-top: 60px;
+}
+
+.hero-text h2 {
+  font-size: 2.2rem;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.hero-text p {
+  color: var(--color-muted);
+  max-width: 480px;
+  margin-bottom: 20px;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Anéis decorativos no lado direito */
+.hero-rings {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  justify-self: center;
+}
+
+.ring {
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 242, 255, 0.4);
+  box-shadow: 0 0 32px rgba(0, 242, 255, 0.4);
+}
+
+.ring1 {
+  animation: ring-spin 16s linear infinite;
+}
+.ring2 {
+  inset: 22%;
+  border-color: rgba(106, 92, 246, 0.6);
+  animation: ring-spin 20s linear reverse infinite;
+}
+.ring3 {
+  inset: 30%;
+  border-color: rgba(255, 255, 255, 0.35);
+  animation: ring-pulse 4s ease-in-out infinite;
+}
+
+@keyframes ring-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ring-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   SEÇÃO COMO FUNCIONA
+   ========================================================= */
+.como-funciona {
+  padding-top: 80px;
+}
+
+.como-funciona h2 {
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+
+.como-funciona .subtitulo {
+  color: var(--color-muted);
+  margin-bottom: 24px;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.step {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 18px 16px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.step img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.step h3 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.step p {
+  font-size: 0.95rem;
+  color: var(--color-muted);
+}
+
+/* =========================================================
+   SEÇÃO AURY EM DESTAQUE
+   ========================================================= */
+.aury-section {
+  padding-top: 80px;
+}
+
+.aury-wrapper {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+  gap: 32px;
+  align-items: center;
+}
+
+/* Bloco visual da Aury (esquerda no HTML) */
+.aury-frame {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(circle at 0% 0%, rgba(0, 242, 255, 0.2), transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(106, 92, 246, 0.3), transparent 60%),
+    #06091d;
+  overflow: hidden;
+  margin: 0 auto;
+  box-shadow: var(--shadow-soft), var(--shadow-neon);
+}
+
+/* Anéis energéticos por trás (híbrido C) */
+.aury-energy {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 242, 255, 0.6);
+  box-shadow: 0 0 26px rgba(0, 242, 255, 0.7);
+  animation: aury-energy 6s ease-in-out infinite;
+}
+
+.aury-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Texto da Aury */
+.aury-text {
+  max-width: 540px;
+}
+
+.aury-text h2 {
+  font-size: 1.9rem;
+  margin-bottom: 10px;
+}
+
+.aury-text p {
+  color: var(--color-muted);
+  margin-bottom: 10px;
+}
+
+.aury-text .destaque {
+  margin-top: 6px;
+  color: var(--color-accent-soft);
+}
+
+@keyframes aury-energy {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   BENEFÍCIOS
+   ========================================================= */
+.beneficios {
+  padding-top: 80px;
+}
+
+.beneficios h2 {
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+}
+
+.benefit-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.benefit-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 18px 16px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.benefit-card img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.benefit-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.benefit-card p {
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   PLANOS
+   ========================================================= */
+.planos {
+  padding-top: 80px;
+}
+
+.planos h2 {
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+}
+
+.planos-container {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.plano-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 20px 18px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.plano-card.destaque {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-neon);
+  transform: translateY(-4px);
+}
+
+.plano-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
+
+.plano-card .preco {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.plano-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+}
+
+.plano-card li {
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  margin-bottom: 6px;
+}
+
+/* =========================================================
+   FEEDBACK - CARROSSEL
+   ========================================================= */
+.feedback {
+  padding-top: 80px;
+  padding-bottom: 90px;
+}
+
+.feedback h2 {
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+}
+
+.carousel {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1fr;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.feedback-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 18px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition-normal),
+    filter var(--transition-normal), opacity var(--transition-normal);
+}
+
+/* laterais borradas */
+.feedback-card.left,
+.feedback-card.right {
+  filter: blur(2px);
+  opacity: 0.6;
+  transform: scale(0.94);
+}
+
+/* centro nítido */
+.feedback-card.center.active {
+  filter: none;
+  opacity: 1;
+  transform: scale(1.03);
+  box-shadow: var(--shadow-neon);
+}
+
+.feedback-card p {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.feedback-card h4 {
+  font-size: 0.9rem;
+  color: var(--color-accent-soft);
+}
+
+/* Controles do carrossel */
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.carousel-controls button {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(5, 7, 24, 0.9);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.carousel-controls button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 0 18px rgba(0, 242, 255, 0.5);
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.footer {
+  padding: 18px 16px 30px;
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .hero-rings {
+    order: -1;
+  }
+
+  .steps,
+  .benefit-cards,
+  .planos-container {
+    grid-template-columns: 1fr;
+  }
+
+  .aury-wrapper {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .carousel {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback-card.left,
+  .feedback-card.right {
+    display: none;
+  }
+
+  .feedback-card.center.active {
+    transform: none;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .menu {
+    align-self: flex-end;
+  }
+}
