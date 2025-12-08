@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StarterCash | Acessar conta</title>
+
+    <!-- ESTILO GLOBAL (mesmo da home) -->
+    <link rel="stylesheet" href="../css/style.css" />
+    <!-- ESTILO ESPECÍFICO DA TELA DE AUTENTICAÇÃO -->
+    <link rel="stylesheet" href="../css/auth.css" />
+
+    <!-- ÍCONES (olhinho, etc.) -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<!--
+    body começa com fonte padrão (font-scale-0)
+    e pode receber alto contraste via JS (classe .alto-contraste)
+-->
+<body class="font-scale-0">
+
+<!-- =========================================================
+     CONTROLES DE ACESSIBILIDADE (mesmo padrão da home)
+========================================================= -->
+<div class="acessibilidade-controls">
+    <button id="font-menor" aria-label="Diminuir tamanho da fonte">A-</button>
+    <button id="font-maior" aria-label="Aumentar tamanho da fonte">A+</button>
+    <button id="toggle-contraste" aria-label="Ativar ou desativar alto contraste">
+        ◐
+    </button>
+</div>
+
+<!-- Fundo animado de estrelas -->
+<div class="background-stars"></div>
+
+<!-- =========================================================
+     CONTEÚDO PRINCIPAL DA PÁGINA DE AUTENTICAÇÃO
+========================================================= -->
+<main class="auth-main">
+
+    <!-- CARD PRINCIPAL (LOGIN / CADASTRO) -->
+    <section class="auth-card" aria-label="Área de autenticação">
+
+        <!-- Cabeçalho do card com marca -->
+        <header class="auth-header">
+            <h1 class="auth-logo">
+                Starter<span class="gradient-text">Cash</span>
+            </h1>
+            <p class="auth-subtitle">
+                Acesse sua jornada gamificada de educação financeira.
+            </p>
+        </header>
+
+        <!-- ABAS: ENTRAR / CRIAR CONTA -->
+        <nav class="auth-tabs" aria-label="Alternar entre login e cadastro">
+            <!--
+                data-tab indica qual conteúdo mostrar.
+                A aba "Entrar" começa ativa.
+            -->
+            <button class="auth-tab active" data-tab="login">
+                Entrar
+            </button>
+            <button class="auth-tab" data-tab="register">
+                Criar conta
+            </button>
+        </nav>
+
+        <!-- CONTEÚDOS DAS ABAS -->
+        <div class="auth-contents">
+
+            <!-- =================== FORMULÁRIO DE LOGIN =================== -->
+            <form id="login-form" class="auth-form active" novalidate>
+                <div class="form-group">
+                    <label for="login-email">E-mail</label>
+                    <input
+                        type="email"
+                        id="login-email"
+                        name="email"
+                        placeholder="seuemail@exemplo.com"
+                        required
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Senha</label>
+                    <div class="password-field">
+                        <input
+                            type="password"
+                            id="login-password"
+                            name="password"
+                            placeholder="Sua senha"
+                            required
+                        />
+                        <!-- Botão para mostrar/ocultar senha -->
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            data-target="login-password"
+                            aria-label="Mostrar ou ocultar senha"
+                        >
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Entrar</button>
+                    <!-- Link para recuperar senha -->
+                    <button
+                        type="button"
+                        class="link-button"
+                        id="open-recovery"
+                    >
+                        Esqueci minha senha
+                    </button>
+                </div>
+            </form>
+
+            <!-- ============== FORMULÁRIO DE CRIAÇÃO DE CONTA ============= -->
+            <form id="register-form" class="auth-form" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="register-name">Nome completo</label>
+                        <input
+                            type="text"
+                            id="register-name"
+                            name="name"
+                            placeholder="Seu nome"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group form-group-small">
+                        <label for="register-age">Idade</label>
+                        <input
+                            type="number"
+                            id="register-age"
+                            name="age"
+                            min="10"
+                            max="100"
+                            placeholder="18"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-email">E-mail</label>
+                    <input
+                        type="email"
+                        id="register-email"
+                        name="email"
+                        placeholder="seuemail@exemplo.com"
+                        required
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password">Senha</label>
+                    <div class="password-field">
+                        <input
+                            type="password"
+                            id="register-password"
+                            name="password"
+                            placeholder="Crie uma senha"
+                            required
+                        />
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            data-target="register-password"
+                            aria-label="Mostrar ou ocultar senha"
+                        >
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-confirm">Confirmar senha</label>
+                    <div class="password-field">
+                        <input
+                            type="password"
+                            id="register-confirm"
+                            name="confirmPassword"
+                            placeholder="Repita a senha"
+                            required
+                        />
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            data-target="register-confirm"
+                            aria-label="Mostrar ou ocultar senha de confirmação"
+                        >
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        Criar conta
+                    </button>
+                </div>
+            </form>
+
+            <!-- =================== RECUPERAÇÃO DE SENHA =================== -->
+            <div
+                id="recovery-panel"
+                class="recovery-panel"
+                aria-hidden="true"
+            >
+                <h2>Recuperar senha</h2>
+                <p>
+                    Informe seu e-mail para enviarmos um link de redefinição
+                    de senha.
+                </p>
+
+                <div class="form-group">
+                    <label for="recovery-email">E-mail</label>
+                    <input
+                        type="email"
+                        id="recovery-email"
+                        name="recoveryEmail"
+                        placeholder="seuemail@exemplo.com"
+                    />
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-primary" id="send-recovery">
+                        Enviar link
+                    </button>
+                    <button
+                        type="button"
+                        class="link-button"
+                        id="close-recovery"
+                    >
+                        Voltar para o login
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rodapé do card com link para voltar -->
+        <footer class="auth-footer">
+            <a href="../index.html" class="link-button">
+                ← Voltar para a página inicial
+            </a>
+        </footer>
+    </section>
+
+</main>
+
+<!-- JS ESPECÍFICO DA PÁGINA DE AUTENTICAÇÃO -->
+<script src="../js/auth.js"></script>
+</body>
+</html>
