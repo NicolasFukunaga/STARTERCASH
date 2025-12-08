@@ -167,11 +167,86 @@ document.addEventListener("DOMContentLoaded", () => {
   // -----------------------------
   // Aqui apenas prevenimos o comportamento padrão do form
   // e mostramos um alerta de demonstração.
-  loginForm?.addEventListener("submit", (event) => {
+  /*loginForm?.addEventListener("submit", (event) => {
     event.preventDefault();
     alert("Login submetido (aqui entraria sua lógica de autenticação).");
-  });
+    const email = document.getElementById("login-email").value.trim();
+    const senha = document.getElementById("login-password").value.trim();
 
+    // const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // if (!regexEmail.test(email)) {
+    //   alert("E-mail inválido.");
+    //   return;
+    // }
+    try {
+      const resp = fetch("http://localhost:8080/login", {
+        method: "POST",
+        credentials: "include", 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha })
+      });
+
+      // if (!resp.ok) {
+      //   alert("Credenciais inválidas.");
+      //   return;
+      // }
+
+      const data = resp.json();
+      console.log("Logado:", data);
+      window.location.href = "../html/lobby.html";
+
+    } catch (err) {
+      console.error("Erro no login:", err);
+    }
+  });
+*/
+
+// supondo que loginForm exista
+loginForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  // alert("Login submetido (aqui entraria sua lógica de autenticação).");
+  const email = document.getElementById("login-email").value.trim();
+  const senha = document.getElementById("login-password").value.trim();
+
+  try {
+    const res = await fetch("http://localhost:8080/login", {
+      method: "POST",
+      credentials: "include", 
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ email, senha })
+    });
+
+    // Se o backend retornar HTML/texto em erro, evita tentar res.json() direto
+    if (!res.ok) {
+      // lê texto para debug (o backend pode retornar HTML ou mensagem)
+      const text = await res.text();
+      console.warn("Login não OK:", res.status, text);
+      // Você pode alertar ou mostrar mensagem na UI
+      alert("Erro no login. Código: " + res.status);
+      return; // interrompe — não redireciona
+    }
+
+    // tenta parsear JSON, mas se não for JSON faz fallback para text
+    let data;
+    try {
+      data = await res.json();
+    } catch (err) {
+      console.warn("Resposta não é JSON, lendo como texto...");
+      data = await res.text();
+    }
+
+    console.log("Resposta do login:", data);
+
+    // se quiser redirecionar sempre que o status for 200:
+    window.location.href = "../html/lobby.html";
+
+  } catch (err) {
+    console.error("Erro no login:", err);
+    alert("Erro de rede/interno. Veja console.");
+  }
+});
+/*
   registerForm?.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -184,5 +259,65 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     alert("Cadastro submetido (aqui entraria sua lógica de criação de conta).");
-  });
+  });*/
+
+
+  registerForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const nome = document.getElementById("register-name").value.trim();
+  const idade = Number(document.getElementById("register-age").value);
+  const email = document.getElementById("register-email").value.trim();
+  const senha = document.getElementById("register-password").value;
+  const confirmar = document.getElementById("register-confirm").value;
+
+  // validação de senhas
+  if (senha !== confirmar) {
+    alert("As senhas não conferem. Verifique e tente novamente.");
+    return;
+  }
+
+  // objeto para envio
+  const payload = { nome, idade, email, senha };
+
+  try {
+    const res = await fetch("http://localhost:8080/cadastro", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    // tratar erro HTTP
+    if (!res.ok) {
+      const txt = await res.text();
+      console.warn("Erro no cadastro:", res.status, txt);
+      alert("Erro ao cadastrar. Código: " + res.status);
+      return;
+    }
+
+    // tenta JSON → se falhar, usa texto
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      data = await res.text();
+    }
+
+    console.log("Cadastro OK:", data);
+
+    // redirecionar após criar conta
+    window.location.href = "../html/lobby.html";
+
+  } catch (err) {
+    console.error("Erro no cadastro:", err);
+    alert("Erro interno ou de rede. Veja o console.");
+  }
 });
+
+});
+
+
