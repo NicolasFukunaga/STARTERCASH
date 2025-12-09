@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lobby 3D — StarterCash</title>
+<style>
+  :root{
+    --bg:#02021a;
+    --panel: rgba(255,255,255,0.03);
+    --glass: rgba(255,255,255,0.04);
+    --neon:#00f2ff;
+    --accent:#6a5cf6;
+    --muted:#9aa6c7;
+    --gold:#ffd166;
+    --maxw:1200px;
+    /* troque pela sua imagem de lobby (panorâmica preferível) */
+    --lobby-img: url('path/para/sua-imagem.jpg');
+  }
+
+  /* reset */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    height:100%;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    background: linear-gradient(180deg,#000012 0%, #000 100%);
+    color:#eaf2ff;
+    overflow:hidden;
+    perspective:1400px; /* câmera global */
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* SCENE: camadas de profundidade */
+  .scene{
+    position:fixed;inset:0;transform-style:preserve-3d;pointer-events:none;
+  }
+  .bg-layer{
+    position:absolute;inset:0;background-size:cover;background-position:center center;
+    transform-origin:center center;will-change:transform,filter;
+    filter:brightness(0.55) saturate(1.05);
+  }
+  /* fundo distante (imagem do lobby) - substitua a url na variável root */
+  .bg-far{
+    background-image: var(--lobby-img);
+    transform: translateZ(-900px) scale(1.5) translateY(-60px);
+    opacity:1;
+    pointer-events:none;
+  }
+  /* névoa / blur perto da câmera para profundidade */
+  .bg-near{
+    background:
+      radial-gradient(ellipse at 10% 20%, rgba(0,242,255,0.06), transparent 6%),
+      linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.45));
+    transform: translateZ(-120px) scale(1.05);
+    opacity:0.85;
+    mix-blend-mode:screen;
+    pointer-events:none;
+  }
+
+  /* wrapper central com tilt 3D interativo */
+  .wrap{
+    position:relative;z-index:3;height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;
+  }
+
+  .lobby-frame{
+    width:min(var(--maxw),96%);height:84vh;border-radius:20px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    transform-style:preserve-3d;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.7), 0 0 80px rgba(0,242,255,0.02) inset;
+    display:grid;grid-template-columns:280px 1fr 320px;gap:20px;padding:20px;
+    border:1px solid rgba(255,255,255,0.03);
+    backdrop-filter: blur(6px) saturate(1.1);
+  }
+
+  /* PISO: efeito reflexivo 3D */
+  .floor{
+    position:absolute;left:50%;bottom:10px;width:140%;height:28vh;transform:translateX(-50%) translateZ(30px) rotateX(75deg);
+    background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.8));
+    pointer-events:none;filter:blur(8px);
+    z-index:1;
+  }
+
+  /* HEADER dentro do frame */
+  .header{grid-column:1/4;display:flex;align-items:center;justify-content:space-between;padding:6px 10px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--neon),var(--accent));display:flex;align-items:center;justify-content:center;color:#001}
+  .brand h1{font-size:20px}
+  .brand p{font-size:12px;color:var(--muted)}
+
+  /* Left nav: botões console estilo painel 3D */
+  .nav{background:var(--panel);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:12px;transform: translateZ(40px)}
+  .nav h3{color:var(--muted);font-size:13px}
+  .btn{
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+    border-radius:10px;padding:12px 14px;font-weight:700;border:1px solid rgba(255,255,255,0.03);
+    text-align:left;cursor:pointer;transform-origin:center;transition:transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    display:flex;align-items:center;gap:10px;
+  }
+  /* efeito 3D ao passar mouse */
+  .btn:hover{transform: translateY(-10px) translateZ(30px) rotateX(3deg);box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 28px rgba(0,242,255,0.04)}
+  .btn.primary{border:1px solid rgba(0,242,255,0.22);background:linear-gradient(90deg, rgba(0,242,255,0.04), rgba(106,92,246,0.02));}
+
+  /* centro: palco do avatar/3D card */
+  .center{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;padding:8px;position:relative;transform-style:preserve-3d}
+  .podium{
+    width:420px;height:300px;border-radius:18px;background:linear-gradient(180deg, rgba(6,10,20,0.6), rgba(2,4,10,0.6));
+    border:1px solid rgba(255,255,255,0.04);box-shadow: 0 40px 120px rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;position:relative;
+    transform-style:preserve-3d;transition:transform .12s linear;
+  }
+  /* imagem do lobby/character dentro do podium: substitua via JS ou deixe em branco */
+  .podium .scene-img{
+    width:92%;height:92%;object-fit:cover;border-radius:12px;box-shadow:0 18px 60px rgba(0,0,0,0.6);
+    transform: translateZ(40px);
+    background: linear-gradient(180deg, rgba(0,0,0,0.2), rgba(255,255,255,0.01));
+    display:flex;align-items:center;justify-content:center;color:var(--muted);
+  }
+
+  /* pequeno painel flutuante sobre o palco */
+  .floating-panel{
+    position:absolute;left:50%;top:8%;transform:translateX(-50%) translateZ(70px);
+    background:var(--glass);padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);
+    display:flex;gap:10px;align-items:center;backdrop-filter: blur(6px);
+    box-shadow: 0 18px 60px rgba(0,0,0,0.6);
+  }
+
+  /* right column panels */
+  .right{display:flex;flex-direction:column;gap:14px;padding:8px;transform: translateZ(30px)}
+  .card{background:var(--panel);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+
+  /* footer area */
+  .footer{grid-column:1/4;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;padding:6px 10px}
+
+  /* responsive */
+  @media (max-width:1000px){
+    .lobby-frame{grid-template-columns:1fr; height:92vh; padding:14px}
+    .podium{width:320px;height:260px}
+  }
+</style>
+</head>
+<body>
+
+  <!-- camadas de profundidade (imagem real + névoa) -->
+  <div class="scene" id="scene">
+    <div class="bg-layer bg-far" id="bgFar"></div>
+    <div class="bg-layer bg-near" id="bgNear"></div>
+  </div>
+
+  <div class="wrap" id="wrap">
+    <div class="lobby-frame" id="frame">
+
+      <div class="header">
+        <div class="brand">
+          <div class="logo">SC</div>
+          <div>
+            <h1>StarterCash</h1>
+            <p>Lobby • Entre e explore</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center;">
+          <div style="text-align:right">
+            <div style="font-weight:700">Guilherme</div>
+            <div style="color:var(--muted);font-size:13px">Jogador • Online</div>
+          </div>
+          <div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--neon),var(--accent));display:flex;align-items:center;justify-content:center;color:#001">GU</div>
+        </div>
+      </div>
+
+      <!-- LEFT NAV -->
+      <aside class="nav" aria-label="menu">
+        <h3>Menu</h3>
+        <button class="btn primary" data-action="cursos">Cursos</button>
+        <button class="btn" data-action="passe">Passe</button>
+        <button class="btn" data-action="loja">Loja</button>
+        <button class="btn" data-action="inventario">Inventário</button>
+        <button class="btn" data-action="simuladores">Simuladores</button>
+        <button class="btn" data-action="noticias">Notícias</button>
+        <div style="margin-top:auto" class="card">
+          <strong>Evento</strong>
+          <div style="color:var(--muted);margin-top:6px">Corrida de XP — 3 dias</div>
+        </div>
+      </aside>
+
+      <!-- CENTER STAGE -->
+      <main class="center" role="main">
+        <div class="podium" id="podium" aria-hidden="false">
+          <!-- imagem/ilustração do personagem ou cena do lobby (coloque o src via JS) -->
+          <div class="scene-img" id="sceneImg">Coloque sua imagem do character/lobby aqui (via CSS custom property ou JS)</div>
+        </div>
+
+        <div class="floating-panel" id="floating">
+          <div style="font-weight:700">Missão do Dia</div>
+          <div style="color:var(--muted)">• Complete 3 exercícios</div>
+        </div>
+      </main>
+
+      <!-- RIGHT PANELS -->
+      <aside class="right">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><small style="color:var(--muted)">Nível</small><div style="font-weight:700">12</div></div>
+            <div style="text-align:right"><small style="color:var(--muted)">Próx</small><div style="font-weight:700">560 XP</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <strong>Loja Rápida</strong>
+          <div style="color:var(--muted);margin-top:8px">Avatares, temas e boosts.</div>
+        </div>
+
+        <div class="card">
+          <strong>Conquistas</strong>
+          <div style="color:var(--muted);margin-top:8px">12/30 desbloqueadas</div>
+        </div>
+      </aside>
+
+      <div class="footer">
+        <div>© 2025 StarterCash</div>
+        <div style="color:var(--muted)">Conectado — Modo: JOGADOR</div>
+      </div>
+    </div>
+
+    <!-- floor reflexivo -->
+    <div class="floor" aria-hidden="true"></div>
+  </div>
+
+<script>
+/* Interatividade 3D:
+ - move a "câmera" com o mouse (tilt)
+ - rotaciona o podium (card) conforme mouse sobre o centro
+ - ajusta posição das camadas de fundo para parallax
+*/
+(function(){
+  const frame = document.getElementById('frame');
+  const wrap = document.getElementById('wrap');
+  const scene = document.getElementById('scene');
+  const podium = document.getElementById('podium');
+  const bgFar = document.getElementById('bgFar');
+  const bgNear = document.getElementById('bgNear');
+
+  let ww = window.innerWidth, wh = window.innerHeight;
+
+  // opcional: se quiser trocar a imagem do palco/character por JS:
+  // document.getElementById('sceneImg').style.backgroundImage = "url('path/para/character.png')";
+
+  function onMove(e){
+    const clientX = e.clientX ?? (e.touches && e.touches[0].clientX) ?? ww/2;
+    const clientY = e.clientY ?? (e.touches && e.touches[0].clientY) ?? wh/2;
+    const x = (clientX / ww - 0.5) * 2; // -1 .. 1
+    const y = (clientY / wh - 0.5) * 2;
+
+    // câmera (frame) tilt - leve
+    const rotateY = x * 8; // graus
+    const rotateX = -y * 6;
+    frame.style.transform = `translateZ(0px) rotateX(${6 + rotateX}deg) rotateY(${rotateY}deg)`;
+
+    // podium: mais responsivo ao mouse (parece 3D)
+    const pRotateY = x * 12;
+    const pRotateX = -y * 10;
+    const pTranslateZ = 40 + Math.abs(x)*8 + Math.abs(y)*6;
+    podium.style.transform = `translateZ(${pTranslateZ}px) rotateX(${pRotateX}deg) rotateY(${pRotateY}deg)`;
+
+    // parallax camadas de fundo
+    bgFar.style.transform = `translateZ(-900px) scale(1.5) translateY(${y*30}px) translateX(${x*40}px)`;
+    bgNear.style.transform = `translateZ(-120px) scale(1.05) translateY(${y*10}px) translateX(${x*18}px)`;
+  }
+
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('touchmove', onMove, {passive:true});
+  window.addEventListener('resize', ()=>{ ww = window.innerWidth; wh = window.innerHeight });
+
+  // touch-friendly: clique para "pular" o podium pra frente
+  podium.addEventListener('pointerdown', ()=> {
+    podium.style.transition = 'transform 220ms cubic-bezier(.2,.9,.2,1)';
+    podium.style.transform += ' scale(1.02)';
+    setTimeout(()=> podium.style.transition = '', 260);
+  });
+
+  // acessibilidade/keyboard: mover foco nos botões e aplicar pequeno destaque 3D
+  document.querySelectorAll('.btn').forEach(b=>{
+    b.addEventListener('focus', ()=> b.style.transform = 'translateY(-10px) translateZ(30px) rotateX(3deg)');
+    b.addEventListener('blur', ()=> b.style.transform = '');
+  });
+
+  // EXEMPLO: carregar dinamicamente imagem de fundo do lobby se quiser via JS
+  // const url = 'path/para/sua-imagem.jpg';
+  // bgFar.style.backgroundImage = `url('${url}')`;
+
+})();
+</script>
+</body>
+</html>

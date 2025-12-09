@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-main: #050718;
+            --bg-soft: #080c22;
+            --bg-card: #090e23;
+            /* mais sólido para melhor leitura */
+
+            --color-primary: #6a5cf6;
+            /* Roxo principal */
+            --color-accent: #00f2ff;
+            /* Ciano neon */
+            --color-accent-soft: #4ae9ff;
+            --color-text: #f5f5ff;
+            --color-muted: #a6b1d8;
+
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+
+            --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
+            --shadow-neon: 0 0 30px rgba(0, 242, 255, 0.5);
+
+            --color-primary: #00FFFF;
+            /* Neon Ciano */
+            --color-secondary: #0077B6;
+            /* Azul Médio */
+            --color-dark: #000428;
+            /* Fundo Escuro */
+            --color-darker: #000000;
+            --color-xp: #FFD700;
+            /* Ouro */
+            --font-family: 'Arial', sans-serif;
+
+            --transition-fast: 0.2s ease-out;
+            --transition-normal: 0.3s ease-out;
+
+            --max-width: 1120px;
+
+            /* Velocidade base das partículas (JS ajusta conforme o scroll) */
+            --star-speed: 18s;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: white;
+            background-color: var(--color-dark);
+            /* Simulação de Fundo Estrelado */
+            background-image: linear-gradient(135deg, var(--color-dark) 0%, #000000 100%);
+            background-size: cover;
+            background-repeat: no-repeat;
+            height: 100vh;
+            overflow: hidden;
+
+        }
+
+        .header-lobby {
+            background-color: var(--color-dark);
+            /* background-color: #00FFFF; */
+            display: flex;
+            justify-content: space-around;
+        }
+
+        /* .section-lobby {
+            background-color:var(--color-dark);
+            display: flex;
+            justify-content: space-around;
+            height: 80vh;
+            width: 100%;
+            padding: auto;
+        }
+
+        .botoes-lobby {
+
+            display: flex;
+            flex-direction: column;
+            justify-content: baseline;
+        }
+
+        .aury-lobby {}
+
+        .missao-lobby {} */
+        .section-lobby {
+            background-color: var(--color-dark);
+            display: flex;
+            justify-content: space-around;
+            /* Centraliza horizontalmente */
+            align-items: center;
+            /* Centraliza verticalmente */
+            gap: 80px;
+            /* Espaço entre colunas */
+            height: 80vh;
+            width: 100%;
+        }
+
+        /* Alinhando colunas internas */
+        .botoes-lobby {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            /* distância entre botões */
+        }
+
+        .aury-lobby {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .missao-lobby {
+            font-size: 1.8rem;
+        }
+
+        .footer {
+            background-color: var(--color-dark);
+            padding: 28px 16px 24px;
+            color: var(--color-muted);
+            font-size: 0.85rem;
+        }
+
+        #modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        /* modal principal */
+        #modal-box {
+            width: 90%;
+            height: 80vh;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* botão fechar */
+        #modal-close {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            border: none;
+            background: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        h2{
+            color: #000000;
+        }
+        p{
+            color: #000000;
+
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <header class="header-lobby">
+            <div>
+                <h1>StarterCash</h1>
+            </div>
+            <div>
+                <img src="" alt="">
+                <h3>User</h3>
+                <p>xp:</p>
+                <p>coins:</p>
+            </div>
+        </header>
+        <section class="section-lobby">
+            <section class="botoes-lobby">
+                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal de cursos.</p>')">Cursos</button>
+                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal de passe.</p>')">Passe</button>
+                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal Ranking.</p>')">Ranking</button>
+                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal simples.</p>')">Loja</button>
+                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal simples.</p>')">Inventario</button>
+                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal simples.</p>')">Simuladores</button>
+                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal simples.</p>')">Noticias</button>
+            </section>
+            <section class="aury-lobby">
+                <img src="../assets/aury.png" alt="">
+                <button>Chat</button>
+            </section>
+            <section class="missao-lobby">
+                Missão
+            </section>
+        </section>
+        <!-- <section>
+            Modal
+        </section> -->
+        <div id="modal-overlay">
+            <div id="modal-box">
+                <button id="modal-close" onclick="closeModal()">×</button>
+                <div id="modal-content"></div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p> © 2025 StarterCash — Todos os direitos reservados. </p>
+        </footer>
+    </main>
+
+    <script>
+        const overlay = document.getElementById("modal-overlay");
+        const content = document.getElementById("modal-content");
+
+        function openModal(html) {
+            content.innerHTML = html;
+            overlay.style.display = "flex";
+        }
+
+        function closeModal() {
+            overlay.style.display = "none";
+            content.innerHTML = "";
+        }
+
+        // Fechar ao clicar fora
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) closeModal();
+        });
+
+        // Exemplo de uso
+        function mostrarExemploFormulario() {
+            openModal(`
+      <h2>Formulário de teste</h2>
+      <label>Nome:</label>
+      <input type="text" id="nome" style="width: 100%; padding: 6px; margin: 10px 0;">
+      <button onclick="enviarFormulario()" style="padding:8px 14px;">Enviar</button>
+    `);
+        }
+
+        function enviarFormulario() {
+            const nome = document.getElementById("nome").value;
+            alert("Nome enviado: " + nome);
+            closeModal();
+        }
+    </script>
+</body>
+
+</html>
