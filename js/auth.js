@@ -1,23 +1,13 @@
 // =========================================================
-// auth.js
-// Lógica da página de autenticação (auth.html)
-//
-// - Alternar entre abas "Entrar" e "Criar conta"
-// - Mostrar / ocultar senhas
-// - Painel de recuperação de senha
-// - Controles de acessibilidade (A-, A+, contraste)
+// auth.js — versão revisada, limpa, organizada e funcional
 // =========================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // -----------------------------
-  // 1. CONTROLES DE ACESSIBILIDADE
-  // -----------------------------
-  const body = document.body;
-  const btnFontMenor = document.getElementById("font-menor");
-  const btnFontMaior = document.getElementById("font-maior");
-  const btnContraste = document.getElementById("toggle-contraste");
 
-  // nível atual de fonte (0, 1, 2)
+  // =========================================================
+  // 1) CONTROLES DE ACESSIBILIDADE
+  // =========================================================
+  const body = document.body;
   let escalaFonte = 0;
 
   function atualizarEscalaFonte() {
@@ -28,296 +18,259 @@ document.addEventListener("DOMContentLoaded", () => {
     body.classList.add(`font-scale-${escalaFonte}`);
   }
 
-  if (btnFontMenor) {
-    btnFontMenor.addEventListener("click", () => {
-      escalaFonte--;
-      atualizarEscalaFonte();
-    });
-  }
+  const btnFontMenor = document.getElementById("font-menor");
+  const btnFontMaior = document.getElementById("font-maior");
+  const btnContraste = document.getElementById("toggle-contraste");
 
-  if (btnFontMaior) {
-    btnFontMaior.addEventListener("click", () => {
-      escalaFonte++;
-      atualizarEscalaFonte();
-    });
-  }
+  btnFontMenor?.addEventListener("click", () => {
+    escalaFonte--;
+    atualizarEscalaFonte();
+  });
 
-  if (btnContraste) {
-    btnContraste.addEventListener("click", () => {
-      body.classList.toggle("alto-contraste");
-    });
-  }
+  btnFontMaior?.addEventListener("click", () => {
+    escalaFonte++;
+    atualizarEscalaFonte();
+  });
 
-  // aplica escala inicial
+  btnContraste?.addEventListener("click", () => {
+    body.classList.toggle("alto-contraste");
+  });
+
   atualizarEscalaFonte();
 
-  // -----------------------------
-  // 2. ABAS LOGIN / CADASTRO
-  // -----------------------------
-  const tabButtons = document.querySelectorAll(".auth-tab");
+
+
+  // =========================================================
+  // 2) TROCA ENTRE LOGIN E REGISTRO (NOVO SISTEMA)
+  // =========================================================
+  const tabs = document.querySelectorAll(".auth-tab");
   const loginForm = document.getElementById("login-form");
   const registerForm = document.getElementById("register-form");
 
-  tabButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const target = btn.getAttribute("data-tab"); // "login" ou "register"
+  if (tabs && loginForm && registerForm) {
 
-      // Atualiza estado visual das abas
-      tabButtons.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
 
-      // Mostra o formulário correspondente
-      if (target === "login") {
-        loginForm.classList.add("active");
-        registerForm.classList.remove("active");
-      } else if (target === "register") {
-        registerForm.classList.add("active");
-        loginForm.classList.remove("active");
-      }
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
 
-      // Opcional: fecha painel de recuperação ao trocar de aba
-      fecharPainelRecuperacao();
+        const selected = tab.dataset.tab;
+
+        if (selected === "login") {
+          loginForm.style.display = "block";
+          registerForm.style.display = "none";
+        } else {
+          loginForm.style.display = "none";
+          registerForm.style.display = "block";
+        }
+      });
     });
-  });
 
-  // -----------------------------
-  // 3. MOSTRAR / OCULTAR SENHA
-  // -----------------------------
-  const toggleButtons = document.querySelectorAll(".toggle-password");
+    // Estado inicial
+    loginForm.style.display = "block";
+    registerForm.style.display = "none";
+  }
 
-  toggleButtons.forEach((button) => {
+
+
+  // =========================================================
+  // 3) MOSTRAR / OCULTAR SENHA
+  // =========================================================
+  document.querySelectorAll(".toggle-password").forEach((button) => {
     button.addEventListener("click", () => {
-      const targetId = button.getAttribute("data-target");
-      if (!targetId) return;
-
+      const targetId = button.dataset.target;
       const input = document.getElementById(targetId);
-      if (!input) return;
-
       const icon = button.querySelector("i");
+
+      if (!input) return;
 
       if (input.type === "password") {
         input.type = "text";
-        if (icon) {
-          icon.classList.remove("fa-eye");
-          icon.classList.add("fa-eye-slash");
-        }
+        icon?.classList.replace("fa-eye", "fa-eye-slash");
       } else {
         input.type = "password";
-        if (icon) {
-          icon.classList.remove("fa-eye-slash");
-          icon.classList.add("fa-eye");
-        }
+        icon?.classList.replace("fa-eye-slash", "fa-eye");
       }
     });
   });
 
-  // -----------------------------
-  // 4. RECUPERAÇÃO DE SENHA
-  // -----------------------------
+
+
+  // =========================================================
+  // 4) PAINEL DE RECUPERAÇÃO DE SENHA
+  // =========================================================
   const recoveryPanel = document.getElementById("recovery-panel");
   const openRecoveryBtn = document.getElementById("open-recovery");
   const closeRecoveryBtn = document.getElementById("close-recovery");
   const sendRecoveryBtn = document.getElementById("send-recovery");
   const recoveryEmailInput = document.getElementById("recovery-email");
 
-  function abrirPainelRecuperacao() {
-    if (recoveryPanel) {
-      recoveryPanel.style.display = "block";
-      recoveryPanel.setAttribute("aria-hidden", "false");
-    }
+  function abrirPainel() {
+    recoveryPanel.style.display = "block";
+    recoveryPanel.setAttribute("aria-hidden", "false");
   }
 
-  function fecharPainelRecuperacao() {
-    if (recoveryPanel) {
-      recoveryPanel.style.display = "none";
-      recoveryPanel.setAttribute("aria-hidden", "true");
-    }
+  function fecharPainel() {
+    recoveryPanel.style.display = "none";
+    recoveryPanel.setAttribute("aria-hidden", "true");
   }
 
-  if (openRecoveryBtn) {
-    openRecoveryBtn.addEventListener("click", () => {
-      abrirPainelRecuperacao();
-    });
-  }
+  openRecoveryBtn?.addEventListener("click", abrirPainel);
+  closeRecoveryBtn?.addEventListener("click", fecharPainel);
 
-  if (closeRecoveryBtn) {
-    closeRecoveryBtn.addEventListener("click", () => {
-      fecharPainelRecuperacao();
-    });
-  }
-
-  if (sendRecoveryBtn) {
-    sendRecoveryBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-
-      const email = recoveryEmailInput?.value?.trim();
-      if (!email) {
-        alert("Por favor, informe um e-mail para recuperação.");
-        return;
-      }
-
-      // Aqui futuramente você pode integrar com sua API de envio de e-mail
-      alert(`Se este e-mail estiver cadastrado, enviaremos um link de recuperação para: ${email}`);
-      fecharPainelRecuperacao();
-    });
-  }
-
-  // -----------------------------
-  // 5. SUBMISSÕES (DEMO)
-  // -----------------------------
-  // Aqui apenas prevenimos o comportamento padrão do form
-  // e mostramos um alerta de demonstração.
-  /*loginForm?.addEventListener("submit", (event) => {
+  sendRecoveryBtn?.addEventListener("click", (event) => {
     event.preventDefault();
-    alert("Login submetido (aqui entraria sua lógica de autenticação).");
+    const email = recoveryEmailInput.value.trim();
+
+    if (!email) return alert("Informe um e-mail para recuperação.");
+
+    alert("Se este e-mail estiver cadastrado, enviaremos um link de recuperação.");
+    fecharPainel();
+  });
+
+
+
+  // =========================================================
+  // 5) LOGIN — ENVIO PARA BACKEND
+  // =========================================================
+  loginForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
     const email = document.getElementById("login-email").value.trim();
-    const senha = document.getElementById("login-password").value.trim();
+    const senha = document.getElementById("login-password").value;
 
-    // const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    // if (!regexEmail.test(email)) {
-    //   alert("E-mail inválido.");
-    //   return;
-    // }
     try {
-      const resp = fetch("http://localhost:8080/login", {
+      const res = await fetch("http://localhost:8080/login", {
         method: "POST",
-        credentials: "include", 
-        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({ email, senha })
       });
 
-      // if (!resp.ok) {
-      //   alert("Credenciais inválidas.");
-      //   return;
-      // }
+      if (!res.ok) {
+        alert("Credenciais inválidas.");
+        return;
+      }
 
-      const data = resp.json();
-      console.log("Logado:", data);
       window.location.href = "../html/lobby.html";
-
     } catch (err) {
-      console.error("Erro no login:", err);
+      console.error(err);
+      alert("Erro ao tentar login.");
     }
   });
-*/
 
-// supondo que loginForm exista
-loginForm?.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  // alert("Login submetido (aqui entraria sua lógica de autenticação).");
-  const email = document.getElementById("login-email").value.trim();
-  const senha = document.getElementById("login-password").value.trim();
 
-  try {
-    const res = await fetch("http://localhost:8080/login", {
-      method: "POST",
-      credentials: "include", 
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify({ email, senha })
-    });
 
-    // Se o backend retornar HTML/texto em erro, evita tentar res.json() direto
-    if (!res.ok) {
-      // lê texto para debug (o backend pode retornar HTML ou mensagem)
-      const text = await res.text();
-      console.warn("Login não OK:", res.status, text);
-      // Você pode alertar ou mostrar mensagem na UI
-      alert("Erro no login. Código: " + res.status);
-      return; // interrompe — não redireciona
-    }
-
-    // tenta parsear JSON, mas se não for JSON faz fallback para text
-    let data;
-    try {
-      data = await res.json();
-    } catch (err) {
-      console.warn("Resposta não é JSON, lendo como texto...");
-      data = await res.text();
-    }
-
-    console.log("Resposta do login:", data);
-
-    // se quiser redirecionar sempre que o status for 200:
-    window.location.href = "../html/lobby.html";
-
-  } catch (err) {
-    console.error("Erro no login:", err);
-    alert("Erro de rede/interno. Veja console.");
-  }
-});
-/*
-  registerForm?.addEventListener("submit", (event) => {
+  // =========================================================
+  // 6) CADASTRO — ENVIO PARA BACKEND
+  // =========================================================
+  registerForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const senha = document.getElementById("register-password")?.value;
-    const confirmar = document.getElementById("register-confirm")?.value;
+    const nome = document.getElementById("register-name").value.trim();
+    const idade = Number(document.getElementById("idade").value);
+    const email = document.getElementById("register-email").value.trim();
+    const senha = document.getElementById("register-password").value;
+    const confirmar = document.getElementById("register-confirm").value;
 
-    if (senha && confirmar && senha !== confirmar) {
-      alert("As senhas não conferem. Verifique e tente novamente.");
-      return;
+    if (senha !== confirmar) {
+      return alert("As senhas não conferem.");
     }
 
-    alert("Cadastro submetido (aqui entraria sua lógica de criação de conta).");
-  });*/
+    const payload = { nome, idade, email, senha };
+
+    try {
+      const res = await fetch("http://localhost:8080/cadastro", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        alert("Erro no cadastro.");
+        return;
+      }
+
+      window.location.href = "../html/lobby.html";
+    } catch (err) {
+      console.error(err);
+      alert("Erro interno no cadastro.");
+    }
+  });
+
+}); // FIM DO DOMContentLoaded
 
 
-  registerForm?.addEventListener("submit", async (event) => {
-  event.preventDefault();
 
-  const nome = document.getElementById("register-name").value.trim();
-  const idade = Number(document.getElementById("register-age").value);
-  const email = document.getElementById("register-email").value.trim();
-  const senha = document.getElementById("register-password").value;
-  const confirmar = document.getElementById("register-confirm").value;
+// =========================================================
+// 7) CAMPOS DE DATA DE NASCIMENTO + CÁLCULO DA IDADE
+// =========================================================
 
-  // validação de senhas
-  if (senha !== confirmar) {
-    alert("As senhas não conferem. Verifique e tente novamente.");
+const anoSelect = document.getElementById("nasc-ano");
+const mesSelect = document.getElementById("nasc-mes");
+const diaSelect = document.getElementById("nasc-dia");
+const idadeInput = document.getElementById("idade");
+
+// ------- Preencher anos -------
+const anoAtual = new Date().getFullYear();
+for (let ano = anoAtual; ano >= anoAtual - 100; ano--) {
+  anoSelect.innerHTML += `<option value="${ano}">${ano}</option>`;
+}
+
+// ------- Preencher dias conforme mês -------
+function atualizarDias() {
+  const ano = parseInt(anoSelect.value);
+  const mes = parseInt(mesSelect.value);
+
+  if (!ano || !mes) {
+    diaSelect.innerHTML = '<option value="">Dia</option>';
     return;
   }
 
-  // objeto para envio
-  const payload = { nome, idade, email, senha };
+  const ultimoDia = new Date(ano, mes, 0).getDate();
+  diaSelect.innerHTML = '<option value="">Dia</option>';
 
-  try {
-    const res = await fetch("http://localhost:8080/cadastro", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    // tratar erro HTTP
-    if (!res.ok) {
-      const txt = await res.text();
-      console.warn("Erro no cadastro:", res.status, txt);
-      alert("Erro ao cadastrar. Código: " + res.status);
-      return;
-    }
-
-    // tenta JSON → se falhar, usa texto
-    let data;
-    try {
-      data = await res.json();
-    } catch {
-      data = await res.text();
-    }
-
-    console.log("Cadastro OK:", data);
-
-    // redirecionar após criar conta
-    window.location.href = "../html/lobby.html";
-
-  } catch (err) {
-    console.error("Erro no cadastro:", err);
-    alert("Erro interno ou de rede. Veja o console.");
+  for (let d = 1; d <= ultimoDia; d++) {
+    diaSelect.innerHTML += `<option value="${d}">${d}</option>`;
   }
+}
+
+// ------- Calcular idade -------
+function calcularIdade() {
+  const ano = parseInt(anoSelect.value);
+  const mes = parseInt(mesSelect.value);
+  const dia = parseInt(diaSelect.value);
+
+  if (!ano || !mes || !dia) {
+    idadeInput.value = "";
+    return;
+  }
+
+  const hoje = new Date();
+  const nasc = new Date(ano, mes - 1, dia);
+
+  let idade = hoje.getFullYear() - nasc.getFullYear();
+
+  const fezAniversario =
+    hoje.getMonth() + 1 > mes ||
+    (hoje.getMonth() + 1 === mes && hoje.getDate() >= dia);
+
+  if (!fezAniversario) idade--;
+
+  idadeInput.value = idade;
+}
+
+// Eventos
+anoSelect?.addEventListener("change", () => {
+  atualizarDias();
+  calcularIdade();
 });
 
+mesSelect?.addEventListener("change", () => {
+  atualizarDias();
+  calcularIdade();
 });
 
-
+diaSelect?.addEventListener("change", calcularIdade);
