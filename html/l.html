@@ -187,8 +187,8 @@
         </header>
         <section class="section-lobby">
             <section class="botoes-lobby">
-                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal de cursos.</p>')">Cursos</button>
-                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal de passe.</p>')">Passe</button>
+                <button id="teste-modal">Cursos</button>
+                <button id="teste-passe">Passe</button>
                 <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal Ranking.</p>')">Ranking</button>
                 <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal simples.</p>')">Loja</button>
                 <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal simples.</p>')">Inventario</button>
@@ -218,8 +218,9 @@
         </footer>
     </main>
 
-    <script>
-        const overlay = document.getElementById("modal-overlay");
+    <script src="../js/L.js" type="module"> 
+
+       /* const overlay = document.getElementById("modal-overlay");
         const content = document.getElementById("modal-content");
 
         function openModal(html) {
@@ -251,7 +252,7 @@
             const nome = document.getElementById("nome").value;
             alert("Nome enviado: " + nome);
             closeModal();
-        }
+        }*/
     </script>
 </body>
 
