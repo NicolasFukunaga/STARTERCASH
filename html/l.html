@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lobby</title>
+
     <style>
         * {
             margin: 0;
@@ -13,214 +14,395 @@
         }
 
         :root {
-            --bg-main: #050718;
-            --bg-soft: #080c22;
-            --bg-card: #090e23;
-            /* mais sólido para melhor leitura */
-
-            --color-primary: #6a5cf6;
-            /* Roxo principal */
-            --color-accent: #00f2ff;
-            /* Ciano neon */
-            --color-accent-soft: #4ae9ff;
-            --color-text: #f5f5ff;
-            --color-muted: #a6b1d8;
-
-            --radius-sm: 8px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-
-            --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
-            --shadow-neon: 0 0 30px rgba(0, 242, 255, 0.5);
-
             --color-primary: #00FFFF;
-            /* Neon Ciano */
-            --color-secondary: #0077B6;
-            /* Azul Médio */
             --color-dark: #000428;
-            /* Fundo Escuro */
             --color-darker: #000000;
+            --color-muted: #a6b1d8;
             --color-xp: #FFD700;
-            /* Ouro */
+
             --font-family: 'Arial', sans-serif;
 
-            --transition-fast: 0.2s ease-out;
-            --transition-normal: 0.3s ease-out;
+            --radius-md: 14px;
+            --transition-fast: 0.2s;
+            --star-speed: 10s;
 
-            --max-width: 1120px;
-
-            /* Velocidade base das partículas (JS ajusta conforme o scroll) */
-            --star-speed: 18s;
         }
 
         body {
             font-family: var(--font-family);
+            background: linear-gradient(135deg, var(--color-dark), var(--color-darker));
             color: white;
-            background-color: var(--color-dark);
-            /* Simulação de Fundo Estrelado */
-            background-image: linear-gradient(135deg, var(--color-dark) 0%, #000000 100%);
-            background-size: cover;
-            background-repeat: no-repeat;
-            height: 100vh;
-            overflow: hidden;
-
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+
+        /* ========================== HEADER ========================== */
 
         .header-lobby {
-            background-color: var(--color-dark);
-            /* background-color: #00FFFF; */
             display: flex;
-            justify-content: space-around;
-        }
-
-        /* .section-lobby {
-            background-color:var(--color-dark);
-            display: flex;
-            justify-content: space-around;
-            height: 80vh;
-            width: 100%;
-            padding: auto;
-        }
-
-        .botoes-lobby {
-
-            display: flex;
-            flex-direction: column;
-            justify-content: baseline;
-        }
-
-        .aury-lobby {}
-
-        .missao-lobby {} */
-        .section-lobby {
-            background-color: var(--color-dark);
-            display: flex;
-            justify-content: space-around;
-            /* Centraliza horizontalmente */
+            justify-content: space-between;
+            padding: 20px min(40px, 5%);
             align-items: center;
-            /* Centraliza verticalmente */
-            gap: 80px;
-            /* Espaço entre colunas */
-            height: 80vh;
-            width: 100%;
+            margin-top: 15px;
         }
 
-        /* Alinhando colunas internas */
+        .header-lobby h1 {
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px var(--color-primary);
+        }
+
+        /* ---------- CAIXA DE USUÁRIO --------- */
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 255, 255, 0.05);
+            padding: 12px 20px;
+            border-radius: 16px;
+            border: 2px solid var(--color-primary);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .user-box img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .xp-bar {
+            width: 120px;
+            height: 6px;
+            background: #333;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .xp-fill {
+            width: 25%;
+            height: 100%;
+            background: var(--color-xp);
+        }
+
+        /* ========================== SEÇÃO PRINCIPAL - ALTERAÇÃO CHAVE AQUI ========================== */
+
+        .section-lobby {
+            display: flex;
+            /* DISTRIBUI O ESPAÇO: Botões à esquerda, Missões à direita, e o robô no centro */
+            justify-content: space-between; 
+            align-items: center;
+            flex-grow: 1;
+            min-height: 70vh;
+            padding-top: 20px;
+            /* AUMENTADO O ESPAÇAMENTO LATERAL para afastar os botões e a caixa de missões das bordas */
+            padding-inline: 100px; 
+        }
+
+        /* ---------- BOTÕES LATERAIS --------- */
+
         .botoes-lobby {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            /* distância entre botões */
+            gap: 16px;
+            margin-top: 0;
+            /* Removido o transform original da versão anterior para manter alinhamento */
+            transform: translateY(-50px);
         }
+
+        .neon-btn {
+            width: 180px;
+            padding: 14px 0;
+            background: transparent;
+            color: white;
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition-fast);
+        }
+
+        .neon-btn:hover {
+            background: rgba(0, 255, 255, 0.15);
+            box-shadow: 0 0 18px var(--color-primary);
+        }
+
+        /* ---------- AVATAR - RESTAURADO O CÓDIGO ORIGINAL DO ROBÔ ---------- */
 
         .aury-lobby {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
+            /* Ajuste para centralizar o robô verticalmente */
+            transform: translateY(-98px); 
+            /* Para garantir que ele não seja espremido */
+            flex-shrink: 0; 
         }
 
-        .missao-lobby {
-            font-size: 1.8rem;
+        .aury-lobby img {
+            width: 330px;
+            /* TRANSFORM ORIGINAL DO ROBÔ REMOVIDO PARA EVITAR DUPLICIDADE */
         }
 
-        .footer {
-            background-color: var(--color-dark);
-            padding: 28px 16px 24px;
-            color: var(--color-muted);
-            font-size: 0.85rem;
-        }
-
-        #modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-
-        /* modal principal */
-        #modal-box {
-            width: 90%;
-            height: 80vh;
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        /* botão fechar */
-        #modal-close {
-            position: absolute;
-            right: 15px;
-            top: 10px;
+        .aury-lobby button {
+            padding: 10px 16px;
+            background: var(--color-primary);
             border: none;
-            background: none;
-            font-size: 20px;
+            border-radius: var(--radius-md);
             cursor: pointer;
+            font-weight: bold;
         }
-        h2{
-            color: #000000;
-        }
-        p{
-            color: #000000;
 
+        /* ---------- MISSÕES (CAIXA RETANGULAR GRANDE) --------- */
+
+        .missao-box {
+            /* Largura original restaurada para caber no novo espaçamento */
+            width: 270px; 
+            min-height: 440px;
+            padding: 32px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+
+            border-radius: 18px;
+            border: 2px solid var(--color-primary);
+            background: rgba(0, 255, 255, 0.05);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.35);
+
+            /* Ajuste para alinhar verticalmente */
+            transform: translateY(-37px); 
+            flex-shrink: 0;
         }
+
+        .missao-box h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--color-primary);
+            text-shadow: 0 0 10px rgba(0,255,255,0.6);
+            margin-bottom: 10px;
+        }
+
+        .missao-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .missao-item:last-child {
+            border-bottom: none;
+        }
+
+        .missao-item span {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        /* botão dentro da caixa */
+        .missao-more {
+            margin-top: 8px;
+            padding: 14px 0;
+            width: 100%;
+
+            background: rgba(0, 255, 255, 0.12);
+            border: 1px solid var(--color-primary);
+            border-radius: 12px;
+
+            cursor: pointer;
+            color: white;
+            font-size: 1rem;
+            transition: .2s;
+        }
+
+        .missao-more:hover {
+            background: rgba(0, 255, 255, 0.25);
+            box-shadow: 0 0 20px var(--color-primary);
+        }
+
+
+        /* ========================== RESPONSIVIDADE ========================== */
+        @media (max-width: 1300px) {
+             /* Aumentei o breakpoint para dar mais espaço antes de quebrar a linha */
+            .section-lobby {
+                /* Distribui o espaço nas laterais antes de quebrar */
+                padding-inline: 40px; 
+            }
+        }
+        
+        @media (max-width: 1100px) {
+            .section-lobby {
+                /* Quebra a linha para empilhar os elementos em telas menores */
+                flex-direction: column; 
+                gap: 40px; 
+                padding-top: 0; 
+                overflow-y: auto; 
+                height: auto;
+                padding-inline: 20px;
+            }
+
+            .aury-lobby, .botoes-lobby, .missao-box {
+                /* Remove o ajuste vertical */
+                transform: translateY(0); 
+                /* Centraliza em telas pequenas */
+                margin-inline: auto; 
+            }
+
+            .missao-box, .botoes-lobby {
+                width: 90%; 
+                max-width: 450px; 
+            }
+            
+            .botoes-lobby button {
+                width: 100%;
+            }
+
+            .aury-lobby img {
+                width: 250px; 
+            }
+        }
+ 
+        /* =========================================================
+   FUNDO ANIMADO DE ESTRELAS — VERSÃO AVANÇADA
+   ========================================================= */
+.background-stars {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+
+  background-image:
+
+    /* Camada 1 — estrelas maiores e mais brilhantes */
+    radial-gradient(2px 2px at 5% 10%,  #ffffffcc, transparent),
+    radial-gradient(2px 2px at 15% 30%, #ffffffcc, transparent),
+    radial-gradient(2px 2px at 25% 70%, #ffffffcc, transparent),
+    radial-gradient(2px 2px at 35% 90%, #ffffffcc, transparent),
+    radial-gradient(2px 2px at 45% 50%, #ffffffcc, transparent),
+    radial-gradient(2px 2px at 55% 20%, #ffffffcc, transparent),
+    radial-gradient(2px 2px at 65% 80%, #ffffffcc, transparent),
+    radial-gradient(2px 2px at 75% 40%, #ffffffcc, transparent),
+    radial-gradient(2px 2px at 85% 75%, #ffffffcc, transparent),
+    radial-gradient(2px 2px at 95% 25%, #ffffffcc, transparent),
+
+    /* Camada 2 — estrelas médias espalhadas */
+    radial-gradient(2px 2px at 10% 85%, #ffffff99, transparent),
+    radial-gradient(2px 2px at 20% 55%, #ffffff99, transparent),
+    radial-gradient(2px 2px at 30% 25%, #ffffff99, transparent),
+    radial-gradient(2px 2px at 40% 75%, #ffffff99, transparent),
+    radial-gradient(2px 2px at 50% 95%, #ffffff99, transparent),
+    radial-gradient(2px 2px at 60% 35%, #ffffff99, transparent),
+    radial-gradient(2px 2px at 70% 15%, #ffffff99, transparent),
+    radial-gradient(2px 2px at 80% 45%, #ffffff99, transparent),
+    radial-gradient(2px 2px at 90% 65%, #ffffff99, transparent),
+
+    /* Camada 3 — micro estrelas */
+    radial-gradient(1.5px 1.5px at 12% 12%, #ffffff66, transparent),
+    radial-gradient(1.5px 1.5px at 22% 72%, #ffffff66, transparent),
+    radial-gradient(1.5px 1.5px at 32% 42%, #ffffff66, transparent),
+    radial-gradient(1.5px 1.5px at 42% 18%, #ffffff66, transparent),
+    radial-gradient(1.5px 1.5px at 52% 58%, #ffffff66, transparent),
+    radial-gradient(1.5px 1.5px at 62% 88%, #ffffff66, transparent),
+    radial-gradient(1.5px 1.5px at 72% 28%, #ffffff66, transparent),
+    radial-gradient(1.5px 1.5px at 82% 68%, #ffffff66, transparent),
+    radial-gradient(1.5px 1.5px at 92% 38%, #ffffff66, transparent);
+
+  background-repeat: repeat;
+  animation: stars-move var(--star-speed) linear infinite;
+  opacity: 0.95;
+}
+
+/* Movimento contínuo das partículas */
+@keyframes stars-move {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-320px); }
+}
+
     </style>
 </head>
 
 <body>
+
     <main>
+
         <header class="header-lobby">
-            <div>
-                <h1>StarterCash</h1>
-            </div>
-            <div>
-                <img src="" alt="">
-                <h3>User</h3>
-                <p>xp:</p>
-                <p>coins:</p>
+            <h1>StarterCash</h1>
+
+            <div class="user-box">
+                <img src="https://i.imgur.com/3GvwU3g.png" alt="Avatar do Usuário">
+                
+                <div>
+
+                    <div class="background-stars"></div>
+                    <p><strong>User</strong></p>
+                    <div class="xp-bar">
+                        <div class="xp-fill"></div>
+                    </div>
+                </div>
+                <p style="color: var(--color-xp);">0 🪙</p>
             </div>
         </header>
-        <section class="section-lobby">
-            <section class="botoes-lobby">
-                <button id="teste-modal">Cursos</button>
-                <button id="teste-passe">Passe</button>
-                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal Ranking.</p>')">Ranking</button>
-                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal simples.</p>')">Loja</button>
-                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal simples.</p>')">Inventario</button>
-                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal simples.</p>')">Simuladores</button>
-                <button onclick="openModal('<h2>Olá!</h2><p>Este é um modal simples.</p>')">Noticias</button>
+
+        <div style="flex-grow: 1;"> 
+            <section class="section-lobby">
+
+                <section class="botoes-lobby">
+                    <button class="neon-btn" id="teste-modal">Cursos</button>
+                    <button class="neon-btn">Passe</button>
+                    <button class="neon-btn" onclick="openModal('<h2>Ranking</h2><p>Tela de ranking...</p>')">Ranking</button>
+                    <button class="neon-btn" onclick="openModal('<h2>Loja</h2><p>Tela da loja...</p>')">Loja</button>
+                    <button class="neon-btn" onclick="openModal('<h2>Inventário</h2><p>Seus itens...</p>')">Inventário</button>
+                    <button class="neon-btn" onclick="openModal('<h2>Simuladores</p>')">Simuladores</button>
+                    <button class="neon-btn" onclick="openModal('<h2>Notícias</h2><p>Atualizações...</p>')">Notícias</button>
+                </section>
+
+                <section class="aury-lobby">
+                    <img src="../assets/aury.png" alt="Aury, o robô assistente">
+                    <button class="neon-btn" style="width: 120px; background: var(--color-primary); color: var(--color-darker); border: none; font-weight: 700;">Chat</button>
+                </section>
+
+                <section class="missao-box">
+                    <h2>Missões Diárias</h2>
+
+                    <div class="missao-item">
+                        <p>Completar 1º módulo de Orçamento</p>
+                        <span>1/2 ✔️</span>
+                    </div>
+
+                    <div class="missao-item">
+                        <p>Assistir o vídeo “O que são investimentos?”</p>
+                        <span>0/1 ✔️</span>
+                    </div>
+
+                    <div class="missao-item">
+                        <p>Responder o quiz diário</p>
+                        <span>0/1 ✖️</span>
+                    </div>
+
+                    <button class="missao-more">Ver mais missões</button>
+                </section>
+            
             </section>
-            <section class="aury-lobby">
-                <img src="../assets/aury.png" alt="">
-                <button>Chat</button>
-            </section>
-            <section class="missao-lobby">
-                Missão
-            </section>
-        </section>
-        <!-- <section>
-            Modal
-        </section> -->
+        </div>
+
+
         <div id="modal-overlay">
             <div id="modal-box">
                 <button id="modal-close" onclick="closeModal()">×</button>
                 <div id="modal-content"></div>
             </div>
         </div>
-
-        <footer class="footer">
-            <p> © 2025 StarterCash — Todos os direitos reservados. </p>
-        </footer>
     </main>
 
-    <script src="../js/L.js" type="module"> 
 
-       /* const overlay = document.getElementById("modal-overlay");
+    <script>
+        const overlay = document.getElementById("modal-overlay");
         const content = document.getElementById("modal-content");
 
         function openModal(html) {
@@ -233,27 +415,11 @@
             content.innerHTML = "";
         }
 
-        // Fechar ao clicar fora
         overlay.addEventListener("click", (e) => {
             if (e.target === overlay) closeModal();
         });
-
-        // Exemplo de uso
-        function mostrarExemploFormulario() {
-            openModal(`
-      <h2>Formulário de teste</h2>
-      <label>Nome:</label>
-      <input type="text" id="nome" style="width: 100%; padding: 6px; margin: 10px 0;">
-      <button onclick="enviarFormulario()" style="padding:8px 14px;">Enviar</button>
-    `);
-        }
-
-        function enviarFormulario() {
-            const nome = document.getElementById("nome").value;
-            alert("Nome enviado: " + nome);
-            closeModal();
-        }*/
     </script>
+
 </body>
 
 </html>
