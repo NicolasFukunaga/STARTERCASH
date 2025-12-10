@@ -410,12 +410,14 @@ section > p,
 /* Moeda animada da seção HERO */
 .hero-moeda {
   position: absolute;
-  right: 50px;     /* ajuste conforme seu layout */
-  top: 140px;      /* ajuste também */
+  left: 50%;                /* posiciona no centro */
+  top: 140px;
+  transform: translateX(-120%);  /* compensa metade da largura da moeda */
   width: 120px;
   animation: moeda-pulse 6s ease-in-out infinite;
   filter: drop-shadow(0 0 14px rgba(0, 242, 255, 0.7));
 }
+
 
 
 /* =========================================================
