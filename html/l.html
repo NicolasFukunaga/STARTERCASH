@@ -60,16 +60,19 @@
 
         /* ---------- CAIXA DE USUÁRIO --------- */
 
-        .user-box {
+  .user-box {
     display: flex;
     align-items: center;
     gap: 18px;
     background: rgba(0, 255, 255, 0.07);
     padding: 18px 28px;
-    border-radius: 8px; /* cantos mais quadrados */
+    border-radius: 8px;
     border: 2.5px solid var(--color-primary);
     box-shadow: 0 0 25px var(--color-primary), 0 0 10px rgba(0, 255, 255, 0.5);
+    position: relative;
+    right: 60px;
 }
+
 
 .user-box img {
     width: 52px;
@@ -78,6 +81,7 @@
     border: 2px solid var(--color-primary);
     box-shadow: 0 0 15px var(--color-primary);
     object-fit: cover; /* imagem mais ajustada ao contorno */
+   
 }
 
 .xp-group {
@@ -127,71 +131,51 @@
         /* ---------- BOTÕES LATERAIS --------- */
 
         .botoes-lobby {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 0;
-            /* Restaurado o valor para o layout horizontal */
-            transform: translateY(-50px); 
-        }
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transform: translateY(-50px);
+}
 
-        .neon-btn {
-            width: 180px;
-            padding: 14px 0;
-            background: var(--gradient-button); 
-            color: white;
-            border: 2px solid var(--color-primary);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-size: 1rem;
-            transition: var(--transition-fast);
-            box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
-        }
+.neon-btn {
+    width: 180px;
+    padding: 14px 0;
+    background: #000; /* fundo preto */
+    color: #fff; /* letras brancas */
+    font-weight: 700; /* deixa bold */
+    
+    border: 2px solid #00f0ff; /* borda neon igual Missoes */
+    border-radius: 10px;
 
-        .neon-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #00FFFF;
-            background: var(--gradient-button); 
-        }
+    cursor: pointer;
+    font-size: 1rem;
 
-        .btn-gradient-animado {
-            padding: 14px 0;
-            width: 180px;
-            border: none;
-            border-radius: 14px;
-            color: white;
-            cursor: pointer;
-            background: linear-gradient(90deg,
-                #00FFFF,
-                #0066FF,
-                #9B00FF,
-                #FF00E6,
-                #00FFFF
-            );
-            background-size: 400% 400%;
-            animation: gradientFlow 6s ease infinite;
-        }
+    transition: 0.25s ease;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.4); /* glow suave */
+}
 
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+.neon-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 16px rgba(0, 255, 255, 0.8);
+    border-color: #00ffff;
+}
         
 
         /* ---------- AVATAR E BOTÃO CHAT (EFEITO 3D) --------- */
 
         .aury-lobby {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 14px;
-            /* Restaurado o valor para o layout horizontal */
-            transform: translateY(-50px); 
-            flex-shrink: 0; 
-            position: relative; 
-            z-index: 10;
-        }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+
+    position: absolute;          /* ⭐ Permite centralizar na tela */
+    left: 50%;                   /* ⭐ Centraliza horizontalmente */
+    transform: translate(-50%, -50px); /* ⭐ Mantém seu deslocamento para cima */
+
+    flex-shrink: 0;
+    z-index: 10;
+}
 
         .aury-lobby img {
             width: 330px;
@@ -219,25 +203,26 @@
         }
 
         .aury-lobby .chat-btn { 
-            width: 120px; 
-            background: var(--gradient-button); 
-            color: white; 
-            border: 2px solid var(--color-primary);
-            font-weight: 700;
-            padding: 10px 16px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: var(--transition-fast);
-            box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
-            position: relative; 
-            z-index: 5;
-        }
+    width: 120px; 
+    background: #000;                  /* preto */
+    color: #fff;                       /* letras brancas */
+    font-weight: 700;  
+    border: 2px solid var(--color-primary);
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+    position: relative; 
+    z-index: 5;
+}
 
-        .aury-lobby .chat-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #00FFFF;
-        }
-
+.aury-lobby .chat-btn:hover {
+    transform: scale(1.05);
+    background: #0aff6c25;             /* verde citrino MUITO suave */
+    box-shadow: 0 0 15px #0aff6c55;     /* leve glow verde */
+    color: #ffffff;                     /* mantém branco */
+}
         /* ---------- MISSÕES (CAIXA RETANGULAR GRANDE) --------- */
 
         .missao-box {
@@ -371,6 +356,7 @@
   padding: 10px;
   overflow-y: auto;
   margin-top: 10px;
+  z-index: 999;
 }
 
 /* Mensagens */
@@ -505,16 +491,17 @@
             100% { background-position: 400px 400px; } /* Move na diagonal */
         }
 
-        .aury-modal {
-  display: none;               /* inicialmente escondido */
+  .aury-modal {
+  display: none;
   position: fixed;
   inset: 0;
   justify-content: center;
   align-items: center;
   background: rgba(0,0,0,0.66);
   backdrop-filter: blur(4px);
-  z-index: 9999;
+  z-index: 999999;    /* ⭐ sobrescreve tudo */
 }
+
 
 /* conteúdo do modal */
 .aury-modal-content {
@@ -621,7 +608,7 @@
 
                 <section class="aury-lobby">
                     <div class="aury-base"></div> 
-                    <img src="../assets/aury.png" alt="Aury, o robô assistente">
+                    <img src="../assets/27ed4d6c-7c90-4dc4-8d95-ce00c63706e6-removebg-preview.png" alt="Aury, o robô assistente">
                     <button class="chat-btn">Chat</button> 
                 </section>
 
