@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarterCash | Jornada Gamificada</title>
+    <link rel="stylesheet" href="/css/lobby.css">
+</head>
+
+<script src="https://cdn.userway.org/widget.js" data-account="I1SzGd9PPQ"></script>
+
+
+<body>
+    <div class="game-container">
+
+        <header class="header">
+            <div class="logo">StarterCash</div>
+            <div class="user-info">
+                <img src="assets/avatar-icon.png" alt="User Icon" class="user-icon">
+                <div class="user-details">
+                    <span id="username">USER</span>
+                    <div class="xp-bar-container">
+                        <span class="xp-label">XP</span>
+                        <div class="xp-bar-outline">
+                            <div class="xp-bar-fill" id="xp-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="coins-display">
+                    <span id="coins-count">0</span>
+                    <img src="assets/coin-icon.png" alt="Moeda" class="coin-icon">
+                </div>
+            </div>
+        </header>
+
+        <main class="game-content">
+            
+            <nav class="sidebar">
+                <button class="nav-button active">CURSOS</button>
+                <button class="nav-button">PASSE</button>
+                <button class="nav-button" id="inventory-btn">INVENTÁRIO</button>
+                <button class="nav-button">LOJA</button>
+            </nav>
+
+            <div class="avatar-area">
+                <div id="avatar-model" class="avatar-model default-color">
+                    <div class="avatar-head"></div>
+                    <div class="avatar-torso">
+                        <div id="avatar-jacket" class="jacket"></div>
+                        <div class="shirt"></div>
+                    </div>
+                    <div class="avatar-legs"></div>
+                    <div class="avatar-feet"></div>
+                </div>
+                <div class="avatar-platform"></div>
+            </div>
+            
+            <aside class="missions-panel">
+                <h3>MISSÕES DIÁRIAS</h3>
+                <div class="mission-list" id="mission-list">
+                    </div>
+                <button class="btn-missions">VER MAIS MISSÕES</button>
+            </aside>
+            
+        </main>
+
+        <footer class="game-footer">
+            <button class="btn-action" id="continue-btn">CONTINUAR JORNADA</button>
+            <div class="help-icon">
+                <img src="assets/help-icon.png" alt="Ajuda">
+            </div>
+        </footer>
+    </div>
+
+    <div id="inventory-modal" class="modal">
+        <div class="modal-content">
+            <h2>Inventário & Customização</h2>
+            <div id="inventory-items">
+                <button class="item-btn active" data-item="default-color">Jaqueta Padrão</button>
+                <button class="item-btn" data-item="red-jacket-color">Jaqueta de Patrocinador</button>
+                <button class="item-btn" data-item="suit-up-color">Terno de Trader</button>
+            </div>
+            <button class="close-modal" id="close-modal-btn">Fechar</button>
+        </div>
+    </div>
+
+    <script src="/js/lobby.js"></script>
+</body>
+</html>

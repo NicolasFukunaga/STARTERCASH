@@ -1,89 +1,763 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarterCash | Jornada Gamificada</title>
-    <link rel="stylesheet" href="/css/lobby.css">
+    <link rel="shortcut icon" href="../assets/logoStartercash.png" type="image/x-icon">
+    <!-- <link rel="stylesheet" href="../css/lobby.css"> -->
+    <title>Lobby</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #00FFFF;
+            --color-dark: #000428;
+            --color-darker: #000000;
+            --color-muted: #a6b1d8;
+            --color-xp: #FFD700;
+            --gradient-button: linear-gradient(135deg, #6A00FF, #009DFF);
+            --gradient-base: radial-gradient(circle at center, rgba(0, 255, 255, 0.4) 0%, rgba(0, 255, 255, 0) 70%); 
+
+            --font-family: 'Arial', sans-serif;
+
+            --radius-md: 14px;
+            --transition-fast: 0.2s;
+            --star-speed: 10s;
+
+        }
+
+        body {
+            font-family: var(--font-family);
+            /* REMOVIDO: O gradiente de fundo do body, pois ele é coberto pelas partículas, 
+               deixando apenas a cor base que será preenchida pelo background-particles. */
+            background-color: var(--color-darker); 
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========================== HEADER ========================== */
+
+        .header-lobby {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px min(40px, 5%);
+            align-items: center;
+            margin-top: 15px;
+            position: relative; /* Adicionado para garantir que o Header fique acima das partículas */
+            z-index: 10;
+        }
+
+        .header-lobby h1 {
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px var(--color-primary);
+        }
+
+        /* ---------- CAIXA DE USUÁRIO --------- */
+
+  .user-box {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: rgba(0, 255, 255, 0.07);
+    padding: 18px 28px;
+    border-radius: 8px;
+    border: 2.5px solid var(--color-primary);
+    box-shadow: 0 0 25px var(--color-primary), 0 0 10px rgba(0, 255, 255, 0.5);
+    position: relative;
+    right: 60px;
+}
+
+
+.user-box img {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px; /* cantos suavemente arredondados */
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 15px var(--color-primary);
+    object-fit: cover; /* imagem mais ajustada ao contorno */
+   
+}
+
+.xp-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.xp-bar {
+    width: 110px;
+    height: 10px;
+    background: #222;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: inset 0 0 8px rgba(255, 215, 0, 0.7);
+}
+
+.xp-fill {
+    width: 25%;
+    height: 100%;
+    background: var(--color-xp);
+    box-shadow: 0 0 10px #FFD700;
+}
+
+.xp-text {
+    font-size: 1rem;
+    color: var(--color-xp);
+    font-weight: 700;
+    user-select: none;
+}
+
+
+        /* ========================== SEÇÃO PRINCIPAL (CORRIGIDO) ========================== */
+
+        .section-lobby {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-grow: 1;
+            min-height: 70vh;
+            padding-top: 20px;
+            padding-inline: 100px;
+            position: relative; /* Adicionado para garantir que os elementos fiquem sobre as partículas */
+            z-index: 5;
+        }
+
+        /* ---------- BOTÕES LATERAIS --------- */
+
+        .botoes-lobby {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transform: translateY(-50px);
+}
+
+.neon-btn {
+    width: 180px;
+    padding: 14px 0;
+    background: #000; /* fundo preto */
+    color: #fff; /* letras brancas */
+    font-weight: 700; /* deixa bold */
+    
+    border: 2px solid #00f0ff; /* borda neon igual Missoes */
+    border-radius: 10px;
+
+    cursor: pointer;
+    font-size: 1rem;
+
+    transition: 0.25s ease;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.4); /* glow suave */
+}
+
+.neon-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 16px rgba(0, 255, 255, 0.8);
+    border-color: #00ffff;
+}
+        
+
+        /* ---------- AVATAR E BOTÃO CHAT (EFEITO 3D) --------- */
+
+        .aury-lobby {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+
+    position: absolute;          /* ⭐ Permite centralizar na tela */
+    left: 50%;                   /* ⭐ Centraliza horizontalmente */
+    transform: translate(-50%, -50px); /* ⭐ Mantém seu deslocamento para cima */
+
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+        .aury-lobby img {
+            width: 330px;
+            filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.8)) 
+                    contrast(1.2); 
+            transform: translateY(20px); 
+        }
+
+        .aury-base {
+            width: 280px;
+            height: 40px;
+            border-radius: 50%; 
+            position: absolute;
+            bottom: 60px; 
+            border: 3px solid var(--color-primary);
+            box-shadow: 0 0 30px var(--color-primary), inset 0 0 10px rgba(0, 255, 255, 0.8);
+            background: var(--gradient-base);
+            z-index: -1; 
+            animation: base-pulse 3s infinite alternate; 
+        }
+
+        @keyframes base-pulse {
+            from { box-shadow: 0 0 30px var(--color-primary), inset 0 0 10px rgba(0, 255, 255, 0.8); }
+            to { box-shadow: 0 0 45px var(--color-primary), inset 0 0 15px rgba(0, 255, 255, 1); }
+        }
+
+        .aury-lobby .chat-btn { 
+    width: 120px; 
+    background: #000;                  /* preto */
+    color: #fff;                       /* letras brancas */
+    font-weight: 700;  
+    border: 2px solid var(--color-primary);
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+    position: relative; 
+    z-index: 5;
+}
+
+.aury-lobby .chat-btn:hover {
+    transform: scale(1.05);
+    background: #0aff6c25;             /* verde citrino MUITO suave */
+    box-shadow: 0 0 15px #0aff6c55;     /* leve glow verde */
+    color: #ffffff;                     /* mantém branco */
+}
+        /* ---------- MISSÕES (CAIXA RETANGULAR GRANDE) --------- */
+
+        .missao-box {
+    width: 350px; 
+    min-height: 430px;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+
+    border-radius: 18px;
+    border: 2px solid var(--color-primary);
+
+    /* Deixando transparente para ver o header atrás */
+    background: black;  
+    box-shadow: none; /* Remove o brilho para deixar mais clean */
+
+    transform: translateY(-37px); 
+    flex-shrink: 0;
+
+    color: white;  /* Todas as letras da caixa em branco */
+    font-weight: bold; /* Letras em negrito */
+}
+
+/* Se quiser que h2, p, span e botão herdem a cor e bold */
+.missao-box h2,
+.missao-box p,
+.missao-box span,
+.missao-box .missao-more {
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+
+        .missao-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .missao-item p {
+            color: white;
+        }
+
+        .missao-item:last-child {
+            border-bottom: none;
+        }
+
+        .missao-item span {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        /* botão dentro da caixa */
+        .missao-more {
+            margin-top: 8px;
+            padding: 14px 0;
+            width: 100%;
+
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--color-primary);
+            border-radius: 12px;
+
+            cursor: pointer;
+            color: white;
+            font-size: 1rem;
+            transition: .2s;
+        }
+
+        .missao-more:hover {
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px var(--color-primary);
+        }
+
+            /* ===== MODAL ===== */
+.aury-modal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Conteúdo */
+.aury-modal-content {
+  background: #0b0120;
+  border: 2px solid #1e90ff;
+  width: 380px;
+  height: 520px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px #1e90ff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.aury-modal-content h2 {
+  color: #78f7ff;
+  text-align: center;
+  margin-top: 5px;
+}
+
+/* Botão fechar */
+.aury-close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  color: #78f7ff;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+/* Área do chat */
+.aury-chat-window {
+  flex: 1;
+  background: #040011;
+  border: 1px solid #1e90ff;
+  border-radius: 10px;
+  padding: 10px;
+  overflow-y: auto;
+  margin-top: 10px;
+  z-index: 999;
+}
+
+/* Mensagens */
+.aury-msg {
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  max-width: 85%;
+}
+
+.aury-bot {
+  background: #1e90ff33;
+  border-left: 3px solid #1e90ff;
+  color: #bdeaff;
+}
+
+.aury-user {
+  background: #00ffc833;
+  border-right: 3px solid #00ffc8;
+  margin-left: auto;
+  color: #c8fff1;
+}
+
+/* Input e botão */
+.aury-chat-input {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.aury-chat-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #1e90ff;
+  outline: none;
+  background: #040011;
+  color: #78f7ff;
+}
+
+.aury-chat-input button {
+  background: linear-gradient(90deg, #00ffc8, #1e90ff);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.aury-chat-input button:hover {
+  filter: brightness(1.2);
+}
+
+        
+
+
+        /* ========================== RESPONSIVIDADE ========================== */
+        @media (max-width: 1300px) {
+            .section-lobby {
+                padding-inline: 40px; 
+            }
+        }
+        
+        @media (max-width: 1100px) {
+            .section-lobby {
+                flex-direction: column; 
+                gap: 40px; 
+                padding-top: 0; 
+                overflow-y: auto; 
+                height: auto;
+                padding-inline: 20px;
+            }
+
+            .aury-lobby, .botoes-lobby, .missao-box {
+                transform: translateY(0); 
+                margin-inline: auto; 
+            }
+
+            .missao-box, .botoes-lobby {
+                width: 90%; 
+                max-width: 450px; 
+            }
+            
+            .botoes-lobby button {
+                width: 100%;
+            }
+
+            .aury-lobby img {
+                width: 250px; 
+            }
+        }
+ 
+        /* =========================================================
+        FUNDO ANIMADO DE PARTÍCULAS COLORIDAS (CORREÇÃO DE CONFLITO)
+        ========================================================= */
+        
+        .background-particles {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+
+            /* Adicionado o gradiente escuro de fundo aqui, para que ele seja 
+               a base da animação e não haja conflito com o background-color do body. */
+            background: linear-gradient(135deg, #000428, #300050); 
+            
+            background-image:
+                radial-gradient(2px 2px at 15% 30%, #FF00E6, transparent),
+                radial-gradient(2px 2px at 35% 90%, #9B00FF, transparent),
+                radial-gradient(2px 2px at 55% 20%, #FF00E6, transparent),
+                radial-gradient(2px 2px at 75% 40%, #9B00FF, transparent),
+                radial-gradient(2px 2px at 95% 75%, #FF00E6, transparent),
+                
+                radial-gradient(1.5px 1.5px at 10% 85%, #00FFFF99, transparent),
+                radial-gradient(1.5px 1.5px at 30% 25%, #0066FF99, transparent),
+                radial-gradient(1.5px 1.5px at 50% 95%, #00FFFF99, transparent),
+                radial-gradient(1.5px 1.5px at 70% 15%, #0066FF99, transparent),
+                radial-gradient(1.5px 1.5px at 90% 65%, #00FFFF99, transparent);
+
+            background-repeat: repeat;
+            background-size: 400px 400px; 
+            animation: particles-move 15s linear infinite;
+            opacity: 0.95;
+        } 
+        
+        /* Movimento contínuo das partículas (mais lento e suave) */
+        @keyframes particles-move {
+            0% { background-position: 0 0; }
+            100% { background-position: 400px 400px; } /* Move na diagonal */
+        }
+
+  .aury-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.66);
+  backdrop-filter: blur(4px);
+  z-index: 999999;    /* ⭐ sobrescreve tudo */
+}
+
+
+/* conteúdo do modal */
+.aury-modal-content {
+  width: 380px;
+  height: 520px;
+  background: #0b0120;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 0 30px #00ffd0;
+  border: 2px solid rgba(30,144,255,0.6);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transform-origin: center;
+}
+
+/* botão fechar */
+.aury-close{
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #78f7ff;
+  cursor: pointer;
+}
+
+/* chat window e mensagens (mantive seu estilo) */
+.aury-chat-window {
+  flex: 1;
+  margin-top: 6px;
+  padding: 10px;
+  background: #040011;
+  border-radius: 10px;
+  overflow-y: auto;
+  border: 1px solid rgba(30,144,255,0.12);
+}
+.aury-msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 10px; max-width: 85%; font-size:14px; }
+.aury-bot { background: rgba(30,144,255,0.16); color:#bdeaff; border-left:3px solid #1e90ff; }
+.aury-user { background: rgba(0,255,200,0.06); color:#c8fff1; margin-left:auto; border-right:3px solid #00ffc8; }
+
+/* input */
+.aury-chat-input { display:flex; gap:8px; margin-top:10px; }
+.aury-chat-input input{ flex:1; padding:10px; border-radius:8px; border:1px solid rgba(30,144,255,0.2); background:#040011; color:#78f7ff; }
+.aury-chat-input button{ padding:10px 14px; border-radius:8px; border:none; font-weight:700; cursor:pointer; background:linear-gradient(90deg,#00ffc8,#1e90ff); }
+
+/* animações */
+@keyframes auryOpenAnim {
+  0% { opacity: 0; transform: scale(0.86) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes auryCloseAnim {
+  0% { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(0.92) translateY(10px); }
+}
+
+/* classes que ativam animação */
+.aury-modal.show { display: flex; }
+.aury-modal.show .aury-modal-content { animation: auryOpenAnim 260ms cubic-bezier(.2,.9,.2,1) both; }
+.aury-modal.hide .aury-modal-content { animation: auryCloseAnim 230ms cubic-bezier(.2,.9,.2,1) both; }
+
+        
+    </style>
 </head>
 
-<script src="https://cdn.userway.org/widget.js" data-account="I1SzGd9PPQ"></script>
-
-
 <body>
-    <div class="game-container">
 
-        <header class="header">
-            <div class="logo">StarterCash</div>
-            <div class="user-info">
-                <img src="assets/avatar-icon.png" alt="User Icon" class="user-icon">
-                <div class="user-details">
-                    <span id="username">USER</span>
-                    <div class="xp-bar-container">
-                        <span class="xp-label">XP</span>
-                        <div class="xp-bar-outline">
-                            <div class="xp-bar-fill" id="xp-fill" style="width: 0%;"></div>
+    <main>
+
+        <header class="header-lobby">
+            <h1>StarterCash</h1>
+
+            <div class="user-box">
+                <img src="../assets/aury.png" alt="Avatar do Usuário">
+                
+                <div>
+                    <p><strong>User</strong></p>
+                    
+                    <div class="xp-group">
+                        <div class="xp-bar">
+                            <div class="xp-fill"></div>
                         </div>
+                        <span class="xp-text">25% XP</span>
                     </div>
                 </div>
-                <div class="coins-display">
-                    <span id="coins-count">0</span>
-                    <img src="assets/coin-icon.png" alt="Moeda" class="coin-icon">
-                </div>
+                
+                <p style="color: var(--color-xp);">50 💰</p> 
             </div>
         </header>
 
-        <main class="game-content">
-            
-            <nav class="sidebar">
-                <button class="nav-button active">CURSOS</button>
-                <button class="nav-button">PASSE</button>
-                <button class="nav-button" id="inventory-btn">INVENTÁRIO</button>
-                <button class="nav-button">LOJA</button>
-            </nav>
+        <div style="flex-grow: 1;"> 
+            <section class="section-lobby">
 
-            <div class="avatar-area">
-                <div id="avatar-model" class="avatar-model default-color">
-                    <div class="avatar-head"></div>
-                    <div class="avatar-torso">
-                        <div id="avatar-jacket" class="jacket"></div>
-                        <div class="shirt"></div>
-                    </div>
-                    <div class="avatar-legs"></div>
-                    <div class="avatar-feet"></div>
-                </div>
-                <div class="avatar-platform"></div>
-            </div>
-            
-            <aside class="missions-panel">
-                <h3>MISSÕES DIÁRIAS</h3>
-                <div class="mission-list" id="mission-list">
-                    </div>
-                <button class="btn-missions">VER MAIS MISSÕES</button>
-            </aside>
-            
-        </main>
+                <section class="botoes-lobby">
+                    <button class="neon-btn" id="teste-modal">Cursos</button>
+                    <button class="neon-btn">Passe</button>
+                    <button class="neon-btn">Ranking</button>
+                    <button class="neon-btn">Loja</button>
+                    <button class="neon-btn">Inventário</button>
+                    <button class="neon-btn">Simuladores</button>
+                    <button class="neon-btn">Notícias</button>
+                </section>
 
-        <footer class="game-footer">
-            <button class="btn-action" id="continue-btn">CONTINUAR JORNADA</button>
-            <div class="help-icon">
-                <img src="assets/help-icon.png" alt="Ajuda">
-            </div>
-        </footer>
+                <section class="aury-lobby">
+                    <div class="aury-base"></div> 
+                    <img src="../assets/27ed4d6c-7c90-4dc4-8d95-ce00c63706e6-removebg-preview.png" alt="Aury, o robô assistente">
+                    <button class="chat-btn">Chat</button> 
+                </section>
+
+<div class="aury-modal" id="auryModal" aria-hidden="true" role="dialog" aria-label="Aury Chat">
+  <div class="aury-modal-content">
+    <button class="aury-close" aria-label="Fechar">✕</button>
+    <h2>Aury Chat</h2>
+
+    <div class="aury-chat-window" id="auryChatWindow">
+      <div class="aury-msg aury-bot">Olá! Sou a Aury. Como posso ajudar?</div>
     </div>
 
-    <div id="inventory-modal" class="modal">
-        <div class="modal-content">
-            <h2>Inventário & Customização</h2>
-            <div id="inventory-items">
-                <button class="item-btn active" data-item="default-color">Jaqueta Padrão</button>
-                <button class="item-btn" data-item="red-jacket-color">Jaqueta de Patrocinador</button>
-                <button class="item-btn" data-item="suit-up-color">Terno de Trader</button>
-            </div>
-            <button class="close-modal" id="close-modal-btn">Fechar</button>
+    <div class="aury-chat-input">
+      <input type="text" id="auryInput" placeholder="Digite sua mensagem...">
+      <button id="aurySend">Enviar</button>
+    </div>
+  </div>
+</div>
+
+
+
+                <section class="missao-box">
+                    <h2>Missões Diárias</h2>
+
+                    <div class="missao-item">
+                        <p>Completar 1º módulo de Orçamento</p>
+                        <span>1/2</span>
+                        <span>✔️</span>
+                    </div>
+
+                    <div class="missao-item">
+                        <p>Assistir o vídeo “O que são investimentos?”</p>
+                        <span>0/1 </span>
+                        <span>✔️</span>
+                    </div>
+
+                    <div class="missao-item">
+                        <p>Responder o quiz diário</p>
+                        <span>0/1 ✖️</span>
+                    </div>
+
+                    <button class="missao-more">Ver mais missões</button>
+                </section>
+            
+            </section>
         </div>
-    </div>
 
-    <script src="/js/lobby.js"></script>
+
+        <div id="modal-overlay">
+            <div id="modal-box">
+                <button id="modal-close" onclick="closeModal()">×</button>
+                <div id="modal-content"></div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="background-particles"></div> 
+
+    <script>
+        const overlay = document.getElementById("modal-overlay");
+        const content = document.getElementById("modal-content");
+
+        function openModal(html) {
+            content.innerHTML = html;
+            overlay.style.display = "flex";
+        }
+
+        function closeModal() {
+            overlay.style.display = "none";
+            content.innerHTML = "";
+        }
+
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) closeModal();
+        });
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('auryModal');
+  const openBtn = document.querySelector('.chat-btn');
+  const closeBtn = modal.querySelector('.aury-close');
+  const input = document.getElementById('auryInput');
+  const sendBtn = document.getElementById('aurySend');
+  const chatWindow = document.getElementById('auryChatWindow');
+
+  if (!modal || !openBtn || !closeBtn) {
+    console.error('Modal ou botões não encontrados: confira ids/classes.');
+    return;
+  }
+
+  // abre modal
+  openBtn.addEventListener('click', () => {
+    modal.style.display = 'flex';      // garante visibilidade imediata
+    modal.classList.remove('hide');
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+  });
+
+  // função de fechar com cleanup via animationend
+  function closeModal() {
+    // adiciona classe hide para rodar animação
+    modal.classList.remove('show');
+    modal.classList.add('hide');
+    modal.setAttribute('aria-hidden','true');
+  }
+
+  // quando a animação de fechar terminar, esconde e remove classe hide
+  modal.addEventListener('animationend', (e) => {
+    // só responder quando a animação for do conteúdo do modal
+    if (e.animationName === 'auryCloseAnim') {
+      modal.style.display = 'none';
+      modal.classList.remove('hide');
+    }
+  });
+
+  // evento do X
+  closeBtn.addEventListener('click', closeModal);
+
+  // fechar clicando no backdrop
+  modal.addEventListener('click', (ev) => {
+    if (ev.target === modal) closeModal();
+  });
+
+  // enviar mensagem (mantive seu comportamento)
+  function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    const userMsg = document.createElement('div');
+    userMsg.className = 'aury-msg aury-user';
+    userMsg.textContent = text;
+    chatWindow.appendChild(userMsg);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+    input.value = '';
+
+    setTimeout(() => {
+      const botMsg = document.createElement('div');
+      botMsg.className = 'aury-msg aury-bot';
+      botMsg.textContent = "Recebi sua mensagem! Vamos conversar. 😊";
+      chatWindow.appendChild(botMsg);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }, 600);
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+});
+    </script>
+
 </body>
+
 </html>
+
