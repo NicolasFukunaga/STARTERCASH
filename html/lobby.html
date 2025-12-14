@@ -41,8 +41,87 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+
+            opacity: 0;
+            animation: fadeIn 0.4s ease forwards;
         }
 
+
+                body.fade-out {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .lobby {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 60%;
+        }
+
+        .lobby button {
+            padding: 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #1e293b;
+            color: white;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .lobby button:hover {
+            transform: scale(1.05);
+            background: #334155;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 9999;
+        }
+
+        #loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .spinner {
+            width: 45px;
+            height: 45px;
+            border: 4px solid #1e293b;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loading-overlay p {
+            color: white;
+            font-size: 14px;
+            opacity: 0.8;
+        }
         /* ========================== HEADER ========================== */
 
         .header-lobby {
@@ -599,13 +678,13 @@
             <section class="section-lobby">
 
                 <section class="botoes-lobby">
-                    <button class="neon-btn" id="teste-modal">Cursos</button>
-                    <button class="neon-btn">Passe</button>
-                    <button class="neon-btn">Ranking</button>
-                    <button class="neon-btn">Loja</button>
-                    <button class="neon-btn">Inventário</button>
-                    <button class="neon-btn">Simuladores</button>
-                    <button class="neon-btn">Notícias</button>
+                    <button class="neon-btn" id="cursos-btn" data-link="./cursos.html">Cursos</button>
+                    <button class="neon-btn" id="passe-btn" data-link="./passe.html">Passe</button>
+                    <button class="neon-btn" id="ranking-btn" data-link="./ranking.html">Ranking</button>
+                    <button class="neon-btn" id="loja-btn" data-link="./loja.html">Loja</button>
+                    <button class="neon-btn" id="inventario-btn" data-link="./inventario.html">Inventário</button>
+                    <button class="neon-btn" id="simuladores-btn" data-link="./simuladores.html">Simuladores</button>
+                    <button class="neon-btn" id="noticias-btn" data-link="./noticias.html">Notícias</button>
                 </section>
 
                 <section class="aury-lobby">
@@ -666,96 +745,17 @@
             </div>
         </div>
     </main>
+     <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+    </div>
     
     <div class="background-particles"></div> 
 
-    <script>
-        const overlay = document.getElementById("modal-overlay");
-        const content = document.getElementById("modal-content");
+    <script src="../js/root.js"></script>
+    <script src="../js/L.js"></script>
 
-        function openModal(html) {
-            content.innerHTML = html;
-            overlay.style.display = "flex";
-        }
 
-        function closeModal() {
-            overlay.style.display = "none";
-            content.innerHTML = "";
-        }
-
-        overlay.addEventListener("click", (e) => {
-            if (e.target === overlay) closeModal();
-        });
-document.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('auryModal');
-  const openBtn = document.querySelector('.chat-btn');
-  const closeBtn = modal.querySelector('.aury-close');
-  const input = document.getElementById('auryInput');
-  const sendBtn = document.getElementById('aurySend');
-  const chatWindow = document.getElementById('auryChatWindow');
-
-  if (!modal || !openBtn || !closeBtn) {
-    console.error('Modal ou botões não encontrados: confira ids/classes.');
-    return;
-  }
-
-  // abre modal
-  openBtn.addEventListener('click', () => {
-    modal.style.display = 'flex';      // garante visibilidade imediata
-    modal.classList.remove('hide');
-    modal.classList.add('show');
-    modal.setAttribute('aria-hidden','false');
-  });
-
-  // função de fechar com cleanup via animationend
-  function closeModal() {
-    // adiciona classe hide para rodar animação
-    modal.classList.remove('show');
-    modal.classList.add('hide');
-    modal.setAttribute('aria-hidden','true');
-  }
-
-  // quando a animação de fechar terminar, esconde e remove classe hide
-  modal.addEventListener('animationend', (e) => {
-    // só responder quando a animação for do conteúdo do modal
-    if (e.animationName === 'auryCloseAnim') {
-      modal.style.display = 'none';
-      modal.classList.remove('hide');
-    }
-  });
-
-  // evento do X
-  closeBtn.addEventListener('click', closeModal);
-
-  // fechar clicando no backdrop
-  modal.addEventListener('click', (ev) => {
-    if (ev.target === modal) closeModal();
-  });
-
-  // enviar mensagem (mantive seu comportamento)
-  function sendMessage() {
-    const text = input.value.trim();
-    if (!text) return;
-    const userMsg = document.createElement('div');
-    userMsg.className = 'aury-msg aury-user';
-    userMsg.textContent = text;
-    chatWindow.appendChild(userMsg);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-    input.value = '';
-
-    setTimeout(() => {
-      const botMsg = document.createElement('div');
-      botMsg.className = 'aury-msg aury-bot';
-      botMsg.textContent = "Recebi sua mensagem! Vamos conversar. 😊";
-      chatWindow.appendChild(botMsg);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }, 600);
-  }
-
-  sendBtn.addEventListener('click', sendMessage);
-  input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-});
-    </script>
 
 </body>
 

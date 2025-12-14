@@ -11,7 +11,33 @@
 </head>
 
 <body>
-<h1>Inventario</h1>
+  <header class="header-lobby">
+        <button id="voltar">Voltar para o Lobby</button>
+        <h1>StarterCash</h1>
+
+        <div class="user-box">
+            <img src="../assets/aury.png" alt="Avatar do Usuário">
+
+            <div>
+                <p><strong>User</strong></p>
+
+                <div class="xp-group">
+                    <div class="xp-bar">
+                        <div class="xp-fill"></div>
+                    </div>
+                    <span class="xp-text">25% XP</span>
+                </div>
+            </div>
+
+            <p style="color: var(--color-xp);">50 💰</p>
+        </div>
+    </header>
+
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+    </div>
  <script type="module" src="../js/inventario.js"></script>
 </body>
 
