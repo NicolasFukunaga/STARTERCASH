@@ -1,23 +1,20 @@
+import { pegarUsuario } from "./root.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = pegarUsuario();
 
-  // 🔒 proteção
+  // 🔒 proteção de rota
   if (!user) {
     window.location.href = "../index.html";
     return;
   }
 
-  // nome
-  document.querySelector(".user-box strong").textContent = user.nome;
-
-  // XP
-  const xpPercent = Math.min(user.xp, 100);
-  document.querySelector(".xp-fill").style.width = xpPercent + "%";
-  document.querySelector(".xp-text").textContent = `${xpPercent}% XP`;
-
-  // coins
-  document.querySelector(".user-box > p").textContent = `${user.coins} 💰`;
+  // =========================
+  // DOM
+  // =========================
+  document.getElementById("userNome").textContent = user.nome;
+  document.getElementById("userXp").textContent = `${user.xp}% XP`;
+  document.getElementById("userCoins").textContent = user.coins;
 });
 
 const overlay = document.getElementById("loading-overlay");

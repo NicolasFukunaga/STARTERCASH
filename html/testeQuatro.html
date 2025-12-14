@@ -299,7 +299,272 @@ function simular() {
     meses
   });
 }
-</script>
+</script> 
+
+<!-- <script type="module">
+import { pegarUsuario, salvarUsuario } from "./root.js";
+
+const API_URL = "http://localhost:8080";
+
+let ativoAtual = null;
+let taxasCache = {};
+
+/* ================= BUSCAR TAXAS DA API ================= */
+async function carregarTaxas() {
+  const res = await fetch(`${API_URL}/taxas`);
+  const data = await res.json();
+
+  data.forEach(t => {
+    taxasCache[t.codigo] = t;
+  });
+}
+
+carregarTaxas();
+
+/* ================= MODAL ================= */
+window.abrirSimulador = function (tipo) {
+  ativoAtual = tipo;
+
+  const taxa = taxasCache[tipo];
+  if (!taxa) {
+    alert("Taxa não carregada");
+    return;
+  }
+
+  document.getElementById("modalTitle").innerText =
+    `Simulador de ${taxa.nome}`;
+  document.getElementById("modalDesc").innerText =
+    taxa.descricao;
+
+  document.getElementById("resultado").style.display = "none";
+  document.getElementById("modal").style.display = "flex";
+};
+
+window.fechar = function () {
+  document.getElementById("modal").style.display = "none";
+};
+
+/* ================= SIMULAÇÃO REAL ================= */
+window.simular = async function () {
+  // const valor = parseInt(document.getElementById("valor").value);
+  // const meses = parseInt(document.getElementById("meses").value);
+  const valor = Number(document.getElementById("valor").value);
+const meses = Number(document.getElementById("meses").value);
+
+
+  if (!valor || !meses) {
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  const user = pegarUsuario();
+  if (!user) {
+    alert("Usuário não autenticado");
+    return;
+  }
+
+  if (user.coins < valor) {
+    alert("Coins insuficientes");
+    return;
+  }
+
+  // ================= CHAMADA BACKEND =================
+  const params = new URLSearchParams({
+    alunoId: user.id,
+    tipoInvestimento: ativoAtual,
+    valorInvestido: valor,
+    dias: meses * 30
+  });
+
+  const res = await fetch(`${API_URL}/simulacoes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params
+  });
+
+  const data = await res.json();
+
+  if (data.erro) {
+    alert(data.erro);
+    return;
+  }
+
+  // ================= ATUALIZA STORAGE =================
+  const novoUsuario = {
+    ...user,
+    xp: user.xp + data.xpGanho,
+    coins: data.coinsRestantes
+  };
+
+  salvarUsuario(novoUsuario);
+
+  // ================= UI =================
+  const resDiv = document.getElementById("resultado");
+  resDiv.style.display = "block";
+  resDiv.innerHTML = `
+    <p>Você investiu <strong>${valor} coins</strong></p>
+    <p>Valor estimado no resgate:</p>
+    <h3 style="color:#22c55e">${data.valorFinal} coins</h3>
+    <p>XP ganho: <strong>+${data.xpGanho}</strong></p>
+    <p style="font-size:12px;color:#94a3b8">
+      Resgate disponível em:<br>
+      ${new Date(data.dataResgate).toLocaleDateString()}
+    </p>
+  `;
+};
+</script> -->
+
+<!-- <script type="module">
+import { pegarUsuario, salvarUsuario } from "./root.js";
+
+const API_URL = "http://localhost:8080";
+
+let ativoAtual = null;
+let taxasCache = {};
+let taxasCarregadas = false;
+
+/* ================= CARREGAR TAXAS ================= */
+async function carregarTaxas() {
+  try {
+    const res = await fetch(`${API_URL}/taxas`);
+    if (!res.ok) throw new Error("Erro ao carregar taxas");
+
+    const data = await res.json();
+
+    data.forEach(t => {
+      taxasCache[t.codigo] = t;
+    });
+
+    taxasCarregadas = true;
+    console.log("Taxas carregadas:", taxasCache);
+  } catch (e) {
+    console.error(e);
+    alert("Erro ao carregar taxas");
+  }
+}
+
+carregarTaxas();
+
+/* ================= MODAL ================= */
+window.abrirSimulador = function (tipo) {
+  if (!taxasCarregadas) {
+    alert("Aguarde carregar as taxas...");
+    return;
+  }
+
+  ativoAtual = tipo;
+  const taxa = taxasCache[tipo];
+
+  if (!taxa) {
+    alert("Investimento inválido");
+    return;
+  }
+
+  document.getElementById("modalTitle").innerText =
+    `Simulador de ${taxa.nome}`;
+
+  // document.getElementById("body("modalDesc").innerText =
+  //   taxa.descricao));
+
+  document.getElementById("resultado").style.display = "none";
+  document.getElementById("modal").style.display = "flex";
+};
+
+window.fechar = function () {
+  document.getElementById("modal").style.display = "none";
+};
+
+/* ================= SIMULAÇÃO ================= */
+window.simular = async function () {
+  if (!ativoAtual) {
+    alert("Selecione um investimento");
+    return;
+  }
+
+  const valor = Number(document.getElementById("valor").value);
+  const meses = Number(document.getElementById("meses").value);
+
+  if (valor <= 0 || meses <= 0) {
+    alert("Valores inválidos");
+    return;
+  }
+
+  const user = pegarUsuario();
+  if (!user) {
+    alert("Usuário não autenticado");
+    return;
+  }
+
+  if (user.coins < valor) {
+    alert("Coins insuficientes");
+    return;
+  }
+
+  const params = new URLSearchParams({
+    alunoId: user.id,
+    tipoInvestimento: ativoAtual,
+    valorInvestido: valor,
+    dias: meses * 30
+  });
+
+  let res;
+  try {
+    res = await fetch(`${API_URL}/simulacoes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: params
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Erro de conexão com o backend");
+    return;
+  }
+
+  if (!res.ok) {
+    console.error(await res.text());
+    alert("Erro ao simular investimento");
+    return;
+  }
+
+  const data = await res.json();
+
+  if (
+    data.valorFinal === undefined ||
+    data.xpGanho === undefined ||
+    data.coinsRestantes === undefined ||
+    !data.dataResgate
+  ) {
+    console.error("Resposta inválida:", data);
+    alert("Resposta inválida do servidor");
+    return;
+  }
+
+  // ================= ATUALIZA STORAGE =================
+  salvarUsuario({
+    ...user,
+    xp: user.xp + data.xpGanho,
+    coins: data.coinsRestantes
+  });
+
+  // ================= UI =================
+  const resDiv = document.getElementById("resultado");
+  resDiv.style.display = "block";
+  resDiv.innerHTML = `
+    <p>Você investiu <strong>${valor} coins</strong></p>
+    <p>Valor estimado no resgate:</p>
+    <h3 style="color:#22c55e">${data.valorFinal.toFixed(2)} coins</h3>
+    <p>XP ganho: <strong>+${data.xpGanho}</strong></p>
+    <p style="font-size:12px;color:#94a3b8">
+      Resgate disponível em:<br>
+      ${new Date(data.dataResgate).toLocaleDateString()}
+    </p>
+  `;
+};
+</script> -->
+
+
 
 </body>
 </html>

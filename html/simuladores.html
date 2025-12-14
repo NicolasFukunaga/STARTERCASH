@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,26 +8,27 @@
     <link rel="stylesheet" href="../css/simuladores.css">
     <title>Simuladores</title>
 </head>
+
 <body>
-  <header class="header-lobby">
+    <header class="header-lobby">
         <button id="voltar">Voltar para o Lobby</button>
-        <h1>Simuladores</h1>
+        <h1>StarterCash</h1>
 
         <div class="user-box">
             <img src="../assets/aury.png" alt="Avatar do Usuário">
 
             <div>
-                <p><strong>User</strong></p>
+                <p id="userNome"><strong>User</strong></p>
 
                 <div class="xp-group">
                     <div class="xp-bar">
                         <div class="xp-fill"></div>
                     </div>
-                    <span class="xp-text">25% XP</span>
+                    <span class="xp-text" id="userXp">XP</span>
                 </div>
             </div>
 
-            <p style="color: var(--color-xp);">50 💰</p>
+            <p style="color: var(--color-xp);" id="userCoins">💰</p>
         </div>
     </header>
 
@@ -35,7 +37,8 @@
         <div class="spinner"></div>
         <p>Carregando...</p>
     </div>
-    
+
     <script type="module" src="../js/simuladores.js"></script>
 </body>
+
 </html>

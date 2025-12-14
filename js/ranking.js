@@ -32,24 +32,25 @@
 // });
 
 
+import { pegarUsuario } from "./root.js";
 document.addEventListener("DOMContentLoaded", () => {
-  const user = JSON.parse(localStorage.getItem("user"));
 
-  // 🔒 proteção
+document.addEventListener("DOMContentLoaded", () => {
+  const user = pegarUsuario();
+
+  // 🔒 proteção de rota
   if (!user) {
     window.location.href = "../index.html";
     return;
   }
 
-  // ===============================
-  // HEADER (user box)
-  // ===============================
-  document.querySelector(".user-box strong").textContent = user.nome;
-
-  const xpPercent = Math.min(user.xp ?? 0, 100);
-  document.querySelector(".xp-fill").style.width = xpPercent + "%";
-  document.querySelector(".xp-text").textContent = `${xpPercent}XP`;
-  document.querySelector(".user-box > p").textContent = `${user.coins ?? 0} 💰`;
+  // =========================
+  // DOM
+  // =========================
+  document.getElementById("userNome").textContent = user.nome;
+  document.getElementById("userXp").textContent = `${user.xp}% XP`;
+  document.getElementById("userCoins").textContent = user.coins;
+});
 
   // ===============================
   // CRIA DOM DO RANKING

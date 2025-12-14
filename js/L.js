@@ -120,14 +120,22 @@ document.getElementById("teste-modal").addEventListener("click", mostrarExemploF
 
 import { pegarUsuario } from "./root.js";
 
-const user = pegarUsuario();
+document.addEventListener("DOMContentLoaded", () => {
+  const user = pegarUsuario();
 
-if (user) {
-  document.getElementById("userNome").innerText = user.nome;
-  document.getElementById("userXp").innerText = `${user.xp}% XP`;
-  document.getElementById("userCoins").innerText = user.coins;
-}
+  // 🔒 proteção de rota
+  if (!user) {
+    window.location.href = "../index.html";
+    return;
+  }
 
+  // =========================
+  // DOM
+  // =========================
+  document.getElementById("userNome").textContent = user.nome;
+  document.getElementById("userXp").textContent = `${user.xp}% XP`;
+  document.getElementById("userCoins").textContent = user.coins;
+});
 
   const over= document.getElementById("loading-overlay");
 
