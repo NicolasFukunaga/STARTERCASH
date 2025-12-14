@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Simulador de Investimentos</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ================= RESET ================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 30px;
+}
+
+/* ================= GERAL ================= */
+h1 { margin-bottom: 10px; }
+p { font-size: 14px; color: #cbd5f5; }
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* ================= PERFIS ================= */
+.perfil {
+  margin-top: 40px;
+  padding: 25px;
+  border-radius: 16px;
+}
+
+.perfil h2 {
+  margin-bottom: 10px;
+}
+
+.perfil.conservador {
+  background: #052e16;
+  border-left: 6px solid #22c55e;
+}
+
+.perfil.moderado {
+  background: #1e293b;
+  border-left: 6px solid #38bdf8;
+}
+
+.perfil.arrojado {
+  background: #3b0764;
+  border-left: 6px solid #c084fc;
+}
+
+/* ================= CARDS ================= */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.card {
+  background: #020617;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #334155;
+}
+
+.card h3 {
+  margin-bottom: 5px;
+}
+
+.card p {
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.card button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #2563eb;
+  color: #fff;
+}
+
+.card button:hover {
+  background: #1d4ed8;
+}
+
+/* ================= MODAL ================= */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #020617;
+  padding: 25px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 420px;
+  border: 1px solid #334155;
+}
+
+.modal-content h3 {
+  margin-bottom: 10px;
+}
+
+.modal-content p {
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: #fff;
+}
+
+.modal-content button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.btn-simular {
+  background: #22c55e;
+  color: #000;
+}
+
+.btn-fechar {
+  background: #dc2626;
+  color: #fff;
+}
+
+/* ================= RESULTADO ================= */
+.result {
+  margin-top: 15px;
+  padding: 15px;
+  background: #020617;
+  border-radius: 12px;
+  border: 1px solid #334155;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Simulador de Investimentos</h1>
+  <p>Escolha um tipo de investimento e veja quanto seu dinheiro pode render ao longo do tempo.</p>
+
+  <!-- CONSERVADOR -->
+  <section class="perfil conservador">
+    <h2>🟢 Perfil Conservador</h2>
+    <p>Para quem busca segurança e estabilidade.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Poupança</h3>
+        <p>Simples, segura, porém com rendimento baixo.</p>
+        <button onclick="abrirSimulador('POUPANCA')">Simular</button>
+      </div>
+
+      <div class="card">
+        <h3>CDB</h3>
+        <p>Rende mais que a poupança e é bastante seguro.</p>
+        <button onclick="abrirSimulador('CDB')">Simular</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODERADO -->
+  <section class="perfil moderado">
+    <h2>🔵 Perfil Moderado</h2>
+    <p>Equilíbrio entre segurança e rentabilidade.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Tesouro IPCA+</h3>
+        <p>Protege seu dinheiro da inflação.</p>
+        <button onclick="abrirSimulador('IPCA')">Simular</button>
+      </div>
+
+      <div class="card">
+        <h3>Fundo Imobiliário</h3>
+        <p>Investimento em imóveis com renda mensal.</p>
+        <button onclick="abrirSimulador('FII')">Simular</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARROJADO -->
+  <section class="perfil arrojado">
+    <h2>🟣 Perfil Arrojado</h2>
+    <p>Para quem aceita riscos em busca de maior retorno.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Bitcoin</h3>
+        <p>Alta volatilidade e alto potencial de ganho.</p>
+        <button onclick="abrirSimulador('BTC')">Simular</button>
+      </div>
+
+      <div class="card">
+        <h3>Ethereum</h3>
+        <p>Criptomoeda com grande uso em tecnologia.</p>
+        <button onclick="abrirSimulador('ETH')">Simular</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3 id="modalTitle"></h3>
+    <p id="modalDesc"></p>
+
+    <input type="number" id="valor" placeholder="Valor a investir (R$)">
+    <input type="number" id="meses" placeholder="Tempo (meses)">
+
+    <button class="btn-simular" onclick="simular()">Simular</button>
+    <button class="btn-fechar" onclick="fechar()">Fechar</button>
+
+    <div class="result" id="resultado" style="display:none;"></div>
+  </div>
+</div>
+
+<script>
+/* ================= MOCK API ================= */
+const investimentos = {
+  POUPANCA: { nome: "Poupança", taxa: 0.005, desc: "Baixo risco e baixo rendimento." },
+  CDB: { nome: "CDB", taxa: 0.009, desc: "Mais rendimento que a poupança com segurança." },
+  IPCA: { nome: "Tesouro IPCA+", taxa: 0.012, desc: "Protege contra a inflação." },
+  FII: { nome: "Fundo Imobiliário", taxa: 0.010, desc: "Renda mensal com imóveis." },
+  BTC: { nome: "Bitcoin", taxa: 0.025, desc: "Alta volatilidade." },
+  ETH: { nome: "Ethereum", taxa: 0.021, desc: "Cripto com grande potencial." }
+};
+
+let ativoAtual = null;
+
+/* ================= MODAL ================= */
+function abrirSimulador(tipo) {
+  ativoAtual = tipo;
+  document.getElementById("modalTitle").innerText =
+    `Simulador de ${investimentos[tipo].nome}`;
+  document.getElementById("modalDesc").innerText =
+    investimentos[tipo].desc;
+
+  document.getElementById("resultado").style.display = "none";
+  document.getElementById("modal").style.display = "flex";
+}
+
+function fechar() {
+  document.getElementById("modal").style.display = "none";
+}
+
+/* ================= SIMULAÇÃO ================= */
+function simular() {
+  const valor = parseFloat(document.getElementById("valor").value);
+  const meses = parseInt(document.getElementById("meses").value);
+
+  if (!valor || !meses) {
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  const taxa = investimentos[ativoAtual].taxa;
+  const final = valor * Math.pow(1 + taxa, meses);
+  const lucro = final - valor;
+
+  const res = document.getElementById("resultado");
+  res.style.display = "block";
+  res.innerHTML = `
+    <p>Você investiu <strong>R$ ${valor.toFixed(2)}</strong></p>
+    <p>Após <strong>${meses} meses</strong>, o valor estimado é:</p>
+    <h3 style="color:#22c55e">R$ ${final.toFixed(2)}</h3>
+    <p style="font-size:12px;color:#94a3b8">
+      Simulação aproximada, valores podem variar.
+    </p>
+  `;
+
+  console.log("Payload para backend:", {
+    investimento: ativoAtual,
+    valor,
+    meses
+  });
+}
+</script>
+
+</body>
+</html>

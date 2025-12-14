@@ -162,3 +162,60 @@ body.fade-out {
     user-select: none;
 }
 
+.ranking-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+#ranking-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ranking-item {
+  background: #1e1e1e;
+  padding: 14px 18px;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.ranking-item:hover {
+  transform: scale(1.02);
+}
+
+.posicao {
+  font-weight: bold;
+}
+
+.nome {
+  font-weight: 600;
+}
+
+.xp {
+  color: var(--color-xp, #00ff99);
+  font-weight: bold;
+}
+
+/* TOP 3 */
+.gold {
+  background: linear-gradient(90deg, #ffd70044, #1e1e1e);
+}
+
+.silver {
+  background: linear-gradient(90deg, #c0c0c044, #1e1e1e);
+}
+
+.bronze {
+  background: linear-gradient(90deg, #cd7f3244, #1e1e1e);
+}
+
+.erro {
+  color: red;
+  text-align: center;
+}

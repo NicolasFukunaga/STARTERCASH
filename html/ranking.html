@@ -12,7 +12,7 @@
 <body>
     <header class="header-lobby">
         <button id="voltar">Voltar para o Lobby</button>
-        <h1>StarterCash</h1>
+        <h1>Ranking</h1>
 
         <div class="user-box">
             <img src="../assets/aury.png" alt="Avatar do Usuário">
@@ -24,20 +24,23 @@
                     <div class="xp-bar">
                         <div class="xp-fill"></div>
                     </div>
-                    <span class="xp-text">25% XP</span>
+                    <span class="xp-text"> XP</span>
                 </div>
             </div>
 
             <p style="color: var(--color-xp);">50 💰</p>
         </div>
     </header>
+    <main class="ranking-container">
+        <ul id="ranking-list"></ul>
+    </main>
 
 
     <div id="loading-overlay">
         <div class="spinner"></div>
         <p>Carregando...</p>
     </div>
-    <script src="../js/root.js"></script>
+
     <script type="module" src="../js/ranking.js"></script>
 </body>
 
