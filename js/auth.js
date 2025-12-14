@@ -1,7 +1,7 @@
 // =========================================================
 // auth.js — versão revisada, limpa, organizada e funcional
 // =========================================================
-
+import { salvarUsuario } from "./root.js";
 document.addEventListener("DOMContentLoaded", () => {
 
   // =========================================================
@@ -153,7 +153,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      const sessionData = await res.json(); // 👈 SÓ ISSO
+
+      salvarUsuario(sessionData);
+
       window.location.href = "../html/lobby.html";
+
     } catch (err) {
       console.error(err);
       alert("Erro ao tentar login.");
@@ -192,6 +197,9 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Erro no cadastro.");
         return;
       }
+      const sessionData = await res.json(); // 👈
+
+      salvarUsuario(sessionData);
 
       window.location.href = "../html/lobby.html";
     } catch (err) {

@@ -660,17 +660,17 @@
                 <img src="../assets/aury.png" alt="Avatar do Usuário">
                 
                 <div>
-                    <p><strong>User</strong></p>
+                    <p id="userNome"><strong>User</strong></p>
                     
                     <div class="xp-group">
                         <div class="xp-bar">
                             <div class="xp-fill"></div>
                         </div>
-                        <span class="xp-text">25% XP</span>
+                        <span class="xp-text" id="userXp">% XP</span>
                     </div>
                 </div>
                 
-                <p style="color: var(--color-xp);">50 💰</p> 
+                <p style="color: var(--color-xp);" id="userCoins"> 💰</p> 
             </div>
         </header>
 
@@ -752,8 +752,8 @@
     
     <div class="background-particles"></div> 
 
-    <script src="../js/root.js"></script>
-    <script src="../js/L.js"></script>
+    <!-- <script src="../js/root.js"></script> -->
+    <script src="../js/L.js" type="module"></script>
 
 
 

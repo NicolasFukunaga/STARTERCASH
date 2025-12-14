@@ -96,6 +96,39 @@ document.getElementById("teste-modal").addEventListener("click", mostrarExemploF
 // if (botaoPasse) {
 //     botaoCursos.addEventListener("click", window.mostrarPasse);
 // }
+
+// document.addEventListener("DOMContentLoaded", () => {
+//   const user = JSON.parse(localStorage.getItem("user"));
+
+//   // 🔒 proteção
+//   if (!user) {
+//     window.location.href = "../index.html";
+//     return;
+//   }
+
+//   // nome
+//   document.querySelector(".user-box strong").textContent = user.nome;
+
+//   // XP
+//   const xpPercent = Math.min(user.xp, 100);
+//   document.querySelector(".xp-fill").style.width = xpPercent + "%";
+//   document.querySelector(".xp-text").textContent = `${xpPercent}% XP`;
+
+//   // coins
+//   document.querySelector(".user-box > p").textContent = `${user.coins} 💰`;
+// });
+
+import { pegarUsuario } from "./root.js";
+
+const user = pegarUsuario();
+
+if (user) {
+  document.getElementById("userNome").innerText = user.nome;
+  document.getElementById("userXp").innerText = `${user.xp}% XP`;
+  document.getElementById("userCoins").innerText = user.coins;
+}
+
+
   const over= document.getElementById("loading-overlay");
 
   document.querySelectorAll("button[data-link]").forEach(button => {
@@ -199,12 +232,12 @@ document.addEventListener('DOMContentLoaded', () => {
 }); 
 
 
-const cursos = document.getElementById("cursos-btn");
-const passe = document.getElementById("passe-btn");
-const ranking = document.getElementById("ranking-btn");
-const loja = document.getElementById("loja-btn");
-const inventario = document.getElementById("inventario-btn");
-const simuladores = document.getElementById("simuladores-btn");
-const noticias = document.getElementById("noticias-btn");
+// const cursos = document.getElementById("cursos-btn");
+// const passe = document.getElementById("passe-btn");
+// const ranking = document.getElementById("ranking-btn");
+// const loja = document.getElementById("loja-btn");
+// const inventario = document.getElementById("inventario-btn");
+// const simuladores = document.getElementById("simuladores-btn");
+// const noticias = document.getElementById("noticias-btn");
 
 
