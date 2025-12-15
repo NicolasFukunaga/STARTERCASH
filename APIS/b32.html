@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotações B3 em Cards</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f7f7f7; }
+        h1 { color: #007bff; margin-bottom: 5px; }
+        p { margin-bottom: 20px; color: #6c757d; }
+        
+        #cotacoes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 3 cards por linha em telas médias */
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stock-card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .stock-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stock-header {
+            border-bottom: 2px solid #00a060;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .stock-header h2 {
+            margin: 0;
+            font-size: 1.4em;
+            color: #333;
+        }
+        
+        .price-main {
+            font-size: 2.2em;
+            font-weight: bold;
+            display: block;
+            margin: 5px 0;
+        }
+
+        .var-container {
+            font-size: 1.1em;
+            padding: 5px 0;
+        }
+        .positiva { color: green; }
+        .negativa { color: red; }
+        .neutral { color: #333; }
+
+        .details {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cotações B3: Destaques do Mercado</h1>
+    <p>25 ações da B3 (dados via API de terceiros com proxy CORS).</p>
+
+    <div id="cotacoes-grid">
+        <div class="stock-card"><p>Carregando 25 cotações...</p></div>
+    </div>
+
+    <script>
+        // Lista expandida de 25 tickers da B3
+        const B3_TICKERS = [
+            "PETR4.SA", "VALE3.SA", "ITUB4.SA", "BBDC4.SA", "ABEV3.SA",
+            "WEGE3.SA", "B3SA3.SA", "ITSA4.SA", "BBAS3.SA", "RADL3.SA",
+            "MGLU3.SA", "RENT3.SA", "SUZB3.SA",
+            "ELET3.SA", "LREN3.SA", "SANB11.SA",
+            "CYRE3.SA", "PETZ3.SA", "AZUL4.SA", "CVCB3.SA"
+        ];
+
+        // Proxy CORS (Necessário para evitar o erro de segurança no navegador)
+        const PROXY_URL = "https://api.allorigins.win/raw?url=";
+        
+        // Função para formatar o valor em Real Brasileiro
+        const formatBRL = (value) => {
+            if (typeof value !== 'number' || isNaN(value)) return 'N/A';
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        };
+
+        // Função para buscar a cotação de um ÚNICO símbolo
+        async function fetchQuote(symbol) {
+            const YAHOO_URL = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=1d&interval=5m`;
+            const URL_FETCH = `${PROXY_URL}${encodeURIComponent(YAHOO_URL)}`;
+
+            try {
+                const response = await fetch(URL_FETCH);
+                if (!response.ok) throw new Error(`Status ${response.status}`);
+                
+                const data = await response.json();
+                
+                const result = data.chart.result[0];
+                if (!result || !result.meta) throw new Error("Dados incompletos.");
+
+                const meta = result.meta;
+                const currentPrice = meta.regularMarketPrice;
+                const previousClose = meta.chartPreviousClose;
+                
+                if (!currentPrice || !previousClose) throw new Error("Preço ou Fechamento Anterior ausente.");
+
+                const change = currentPrice - previousClose;
+                const changePercent = (change / previousClose) * 100;
+                
+                // Retorna um objeto com os dados limpos
+                return {
+                    symbol: symbol.replace('.SA', ''),
+                    currentPrice: currentPrice,
+                    previousClose: previousClose,
+                    changePercent: changePercent,
+                    change: change
+                };
+
+            } catch (error) {
+                console.error(`Erro ao buscar ${symbol}:`, error);
+                // Retorna um objeto de erro para exibição
+                return {
+                    symbol: symbol.replace('.SA', ''),
+                    error: "Falha ao carregar"
+                };
+            }
+        }
+
+        // Função principal para buscar TODAS as cotações
+        async function getAllQuotes() {
+            const grid = document.getElementById('cotacoes-grid');
+            grid.innerHTML = '<div class="stock-card"><p>Buscando dados das 25 ações...</p></div>';
+
+            // Mapeia a lista de tickers para uma lista de Promises
+            const quotePromises = B3_TICKERS.map(ticker => fetchQuote(ticker));
+
+            // Executa todas as requisições em paralelo e espera o resultado
+            const results = await Promise.all(quotePromises);
+
+            let htmlContent = '';
+
+            results.forEach(item => {
+                if (item.error) {
+                    // Renderiza o card de erro
+                    htmlContent += `
+                        <div class="stock-card">
+                            <div class="stock-header"><h2>${item.symbol}</h2></div>
+                            <p class="error">${item.error}</p>
+                        </div>
+                    `;
+                } else {
+                    // Renderiza o card da ação
+                    const changeClass = item.changePercent >= 0 ? 'positiva' : 'negativa';
+                    const changePrefix = item.changePercent >= 0 ? '+' : '';
+                    
+                    htmlContent += `
+                        <div class="stock-card">
+                            <div class="stock-header">
+                                <h2>${item.symbol}</h2>
+                            </div>
+                            <span class="price-main">${formatBRL(item.currentPrice)}</span>
+                            
+                            <div class="var-container ${changeClass}">
+                                ${changePrefix}${formatBRL(item.change)} (${changePrefix}${item.changePercent.toFixed(2)}%)
+                            </div>
+                            
+                            <div class="details">
+                                Fechamento Anterior: ${formatBRL(item.previousClose)}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            grid.innerHTML = htmlContent;
+        }
+
+        // Inicia a busca
+        getAllQuotes();
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotação B3 - PETR4</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f7f7f7; }
+        .data-card {
+            border: 2px solid #00a060; /* Verde B3 */
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .data-card h2 {
+            color: #00a060;
+            margin-bottom: 15px;
+        }
+        .price {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cotação da B3: Petrobras (PETR4)</h1>
+    <p>Dados obtidos via API de terceiros que utiliza tickers do Yahoo Finance (.SA).</p>
+
+    <div id="quote-data" class="data-card">Carregando cotação...</div>
+
+    <script>
+      const SYMBOL = "PETR4.SA"; // Petrobras ON na B3
+    
+    // NOVO CÓDIGO: Usando um proxy CORS
+    const YAHOO_URL = `https://query1.finance.yahoo.com/v8/finance/chart/${SYMBOL}?range=1d&interval=5m`;
+    const URL_YAHOO_QUOTE = `https://api.allorigins.win/raw?url=${encodeURIComponent(YAHOO_URL)}`; 
+    // O encodeURIComponent garante que a URL do Yahoo seja passada corretamente.
+
+    // ... o restante da função getB3Quote permanece o mesmo
+        // Função para buscar a cotação
+        async function getB3Quote() {
+            const dataDiv = document.getElementById('quote-data');
+            
+            try {
+                const response = await fetch(URL_YAHOO_QUOTE);
+                
+                if (!response.ok) {
+                    throw new Error(`Erro na requisição: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Extração dos dados
+                const result = data.chart.result[0];
+                
+                if (!result || !result.meta) {
+                    throw new Error("Dados da ação não encontrados ou estrutura inesperada.");
+                }
+
+                const meta = result.meta;
+                
+                // Preço atual é o último preço de negociação
+                const currentPrice = meta.regularMarketPrice; 
+                // Moeda é o Real Brasileiro (BRL)
+                const currency = meta.currency; 
+                // Nome da empresa
+                const shortName = meta.symbol.replace('.SA', ''); 
+                
+                // Extração de outras métricas
+                const previousClose = meta.chartPreviousClose;
+                
+                // Cálculo da variação diária (Variação % = (Atual - Fechamento Anterior) / Fechamento Anterior * 100)
+                const change = currentPrice - previousClose;
+                const changePercent = (change / previousClose) * 100;
+                
+                // Formatação para BRL
+                const formatBRL = (value) => {
+                    return new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(value);
+                };
+
+                dataDiv.innerHTML = `
+                    <h2>${shortName} (${SYMBOL})</h2>
+                    <div class="price">${formatBRL(currentPrice)}</div>
+                    <p style="color: ${change >= 0 ? 'green' : 'red'}; font-weight: bold;">
+                        Variação Diária: ${change >= 0 ? '+' : ''}${formatBRL(change)} (${changePercent.toFixed(2)}%)
+                    </p>
+                    <hr>
+                    <p>Fechamento Anterior: ${formatBRL(previousClose)}</p>
+                    <p>Moeda: ${currency}</p>
+                `;
+
+            } catch (error) {
+                console.error("Erro ao buscar cotação da B3:", error);
+                dataDiv.innerHTML = `<p class="error">Erro ao carregar dados. ${error.message}</p><p>Tente novamente mais tarde ou verifique o ticker.</p>`;
+            }
+        }
+
+        getB3Quote();
+    </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notícias do Mercado - Finnhub API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f9; }
+        h1 { color: #007bff; }
+        #news-container { 
+            max-width: 800px; 
+            margin-top: 20px;
+        }
+        .news-item {
+            background-color: #ffffff;
+            border: 1px solid #dcdcdc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .news-item h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .news-item a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .news-item a:hover {
+            text-decoration: underline;
+        }
+        .news-meta {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Principais Notícias do Mercado (Geral)</h1>
+    <p>Fonte: Finnhub API - Categoria: Geral</p>
+
+    <div id="news-container">Carregando notícias...</div>
+
+    <script>
+        // *** IMPORTANTE: Substitua SUA_CHAVE_API_FINNHUB pela sua chave real do Finnhub ***
+        const API_KEY = "d4us0n1r01qnm7pnt9ggd4us0n1r01qnm7pnt9h0";
+        
+        // Endpoint para Notícias de Mercado (Market News) - Categoria Geral
+        // Você pode mudar 'general' para 'forex', 'crypto', etc.
+        const NEWS_CATEGORY = "general"; 
+        const url = `https://finnhub.io/api/v1/news?category=${NEWS_CATEGORY}&token=${API_KEY}`;
+
+        // Função para formatar o timestamp Unix em data e hora legíveis
+        function formatTimestamp(timestamp) {
+            if (!timestamp) return 'Data Indisponível';
+            const date = new Date(timestamp * 1000); // O Finnhub retorna em segundos, JS espera milissegundos
+            return date.toLocaleString('pt-BR');
+        }
+
+        // Função para buscar e exibir as notícias
+        async function getMarketNews() {
+            const container = document.getElementById('news-container');
+            container.innerHTML = 'Buscando notícias...'; // Atualiza o status
+
+            try {
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`Erro na rede: ${response.status}. Verifique sua chave de API.`);
+                }
+
+                const newsArray = await response.json();
+                
+                // Verifica se a resposta é um array (esperado para notícias) e se não está vazia
+                if (!Array.isArray(newsArray) || newsArray.length === 0) {
+                    container.innerHTML = '<p class="error">Não foi possível carregar notícias ou a lista está vazia.</p>';
+                    return;
+                }
+
+                // Cria o HTML para exibir a lista de notícias
+                let newsHtml = '';
+                
+                // Limita a exibição às primeiras 15 ou 20 notícias (para não sobrecarregar)
+                const limit = Math.min(newsArray.length, 20); 
+
+                for (let i = 0; i < limit; i++) {
+                    const item = newsArray[i];
+
+                    // Verifica se o link e o título existem para evitar erros
+                    if (item.url && item.headline) {
+                        newsHtml += `
+                            <div class="news-item">
+                                <h3><a href="${item.url}" target="_blank">${item.headline}</a></h3>
+                                <p class="news-meta">
+                                    <strong>Fonte:</strong> ${item.source || 'N/A'} | 
+                                    <strong>Publicado em:</strong> ${formatTimestamp(item.datetime)}
+                                </p>
+                                <p>${item.summary || 'Resumo não disponível.'}</p>
+                            </div>
+                        `;
+                    }
+                }
+
+                container.innerHTML = newsHtml;
+
+            } catch (error) {
+                console.error("Erro fatal ao buscar notícias:", error);
+                container.innerHTML = `<p class="error">Erro ao carregar notícias: ${error.message}</p>`;
+            }
+        }
+
+        // Executa a função ao carregar a página
+        getMarketNews(); 
+    </script>
+</body>
+</html>

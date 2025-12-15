@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métricas Financeiras Básicas - Finnhub API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f9; }
+        .data-card { 
+            border: 1px solid #dcdcdc; 
+            padding: 20px; 
+            margin-top: 20px; 
+            border-radius: 8px; 
+            max-width: 500px; 
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .data-card h2 { 
+            color: #007bff; 
+            border-bottom: 2px solid #007bff; 
+            padding-bottom: 5px; 
+            margin-bottom: 15px;
+        }
+        .metric { 
+            margin: 10px 0; 
+            font-size: 1.1em;
+        }
+        .metric strong { 
+            display: inline-block; 
+            width: 180px; 
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Análise Fundamentalista Básica da Apple (AAPL)</h1>
+    <p>Principais métricas financeiras (P/E Ratio, Market Cap) - Mais estável para chaves gratuitas.</p>
+
+    <div id="financial-data" class="data-card">Carregando dados financeiros...</div>
+
+    <script>
+        // *** Substitua SUA_CHAVE_API_FINNHUB pela sua chave real do Finnhub ***
+        const API_KEY = "d4us0n1r01qnm7pnt9ggd4us0n1r01qnm7pnt9h0";
+        const SYMBOL = "AAPL"; 
+        
+        // NOVO ENDPOINT: /stock/metric (Principais Métricas)
+        // Usamos a métrica 'all'
+        const url = `https://finnhub.io/api/v1/stock/metric?symbol=${SYMBOL}&metric=all&token=${API_KEY}`;
+
+        // Função para buscar e exibir os dados
+        async function getBasicFinancials() {
+            const dataDiv = document.getElementById('financial-data');
+            
+            try {
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`Erro na rede: ${response.status}. Verifique sua chave de API.`);
+                }
+
+                const data = await response.json();
+                
+                // Verifica se a API retornou o objeto esperado
+                if (!data.metric) {
+                    dataDiv.innerHTML = `<p class="error">Dados básicos não encontrados. Resposta da API: ${JSON.stringify(data.error || data)}</p>`;
+                    return;
+                }
+
+                const metrics = data.metric;
+                
+                // Formata números para exibição
+                const formatNumber = (value, isCurrency = false) => {
+                    if (typeof value === 'number') {
+                        const style = isCurrency ? 'currency' : 'decimal';
+                        const currency = isCurrency ? 'USD' : undefined;
+
+                        return new Intl.NumberFormat('en-US', { 
+                            style: style, 
+                            currency: currency, 
+                            minimumFractionDigits: isCurrency ? 2 : 2,
+                            maximumFractionDigits: isCurrency ? 2 : 2,
+                        }).format(value);
+                    }
+                    return 'N/A';
+                };
+
+                // Extrai métricas chave para análise fundamentalista
+                const marketCap = metrics.marketCapitalization || metrics.marketCapitalizationQuarterly;
+                const peRatio = metrics.peRatio || 'N/A';
+                const revenuePerShare = metrics.revenuePerShareAnnual || 'N/A';
+
+                dataDiv.innerHTML = `
+                    <h2>Métricas Fundamentais ${SYMBOL}</h2>
+                    
+                    <div class="metric">
+                        <strong>Valor de Mercado (Market Cap):</strong> ${formatNumber(marketCap, true)}
+                    </div>
+                    <div class="metric">
+                        <strong>P/E Ratio (Trailing):</strong> ${formatNumber(peRatio)}
+                    </div>
+                    <div class="metric">
+                        <strong>Receita por Ação (Anual):</strong> ${formatNumber(revenuePerShare, true)}
+                    </div>
+                    <p style="font-size: 0.8em; margin-top: 15px; color: #6c757d;">*Dados obtidos via endpoint 'stock/metric'.</p>
+                `;
+
+            } catch (error) {
+                console.error("Erro fatal ao buscar dados:", error);
+                dataDiv.innerHTML = `<p class="error">Erro ao carregar dados: ${error.message}</p>`;
+            }
+        }
+
+        // Chamada da função
+        getBasicFinancials(); 
+    </script>
+</body>
+</html>

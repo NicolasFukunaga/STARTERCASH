@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotações Múltiplas da B3</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f7f7f7; }
+        h1 { color: #00a060; }
+        #cotacoes-container {
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #00a060; /* Verde B3 */
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .positiva { color: green; font-weight: bold; }
+        .negativa { color: red; font-weight: bold; }
+        .neutral { color: #333; }
+    </style>
+</head>
+<body>
+
+    <h1>Cotações em Tempo Real (B3)</h1>
+    <p>Dados de múltiplas ações obtidos via API de terceiros (usando proxy CORS).</p>
+
+    <div id="cotacoes-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Símbolo</th>
+                    <th>Preço Atual</th>
+                    <th>Variação (%)</th>
+                    <th>Fechamento Anterior</th>
+                </tr>
+            </thead>
+            <tbody id="cotacoes-body">
+                <tr><td colspan="4">Carregando cotações...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Lista de tickers da B3 que você deseja consultar
+        const B3_TICKERS = [
+            "PETR4.SA", // Petrobras
+            "VALE3.SA", // Vale
+            "ITUB4.SA", // Itaú Unibanco
+            "BBDC4.SA", // Bradesco
+            "ABEV3.SA"  // Ambev
+        ];
+
+        // Proxy CORS (Necessário para evitar o erro de segurança no navegador)
+        const PROXY_URL = "https://api.allorigins.win/raw?url=";
+        
+        // Função para formatar o valor em Real Brasileiro
+        const formatBRL = (value) => {
+            if (typeof value !== 'number' || isNaN(value)) return 'N/A';
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        };
+
+        // Função para buscar a cotação de um ÚNICO símbolo
+        async function fetchQuote(symbol) {
+            const YAHOO_URL = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=1d&interval=5m`;
+            const URL_FETCH = `${PROXY_URL}${encodeURIComponent(YAHOO_URL)}`;
+
+            try {
+                const response = await fetch(URL_FETCH);
+                if (!response.ok) throw new Error(`Status ${response.status}`);
+                
+                const data = await response.json();
+                
+                const result = data.chart.result[0];
+                if (!result || !result.meta) throw new Error("Dados incompletos.");
+
+                const meta = result.meta;
+                const currentPrice = meta.regularMarketPrice;
+                const previousClose = meta.chartPreviousClose;
+                
+                if (!currentPrice || !previousClose) throw new Error("Preço ou Fechamento Anterior ausente.");
+
+                const change = currentPrice - previousClose;
+                const changePercent = (change / previousClose) * 100;
+                
+                // Retorna um objeto com os dados limpos
+                return {
+                    symbol: symbol.replace('.SA', ''),
+                    currentPrice: formatBRL(currentPrice),
+                    previousClose: formatBRL(previousClose),
+                    changePercent: changePercent,
+                    change: formatBRL(change)
+                };
+
+            } catch (error) {
+                console.error(`Erro ao buscar ${symbol}:`, error);
+                // Retorna um objeto de erro para exibição
+                return {
+                    symbol: symbol.replace('.SA', ''),
+                    error: "Falha ao carregar"
+                };
+            }
+        }
+
+        // Função principal para buscar TODAS as cotações
+        async function getAllQuotes() {
+            const tbody = document.getElementById('cotacoes-body');
+            tbody.innerHTML = '<tr><td colspan="4">Buscando dados...</td></tr>';
+
+            // Mapeia a lista de tickers para uma lista de Promises (requisições)
+            const quotePromises = B3_TICKERS.map(ticker => fetchQuote(ticker));
+
+            // Executa todas as requisições em paralelo e espera que todas terminem
+            const results = await Promise.all(quotePromises);
+
+            let htmlContent = '';
+
+            results.forEach(item => {
+                if (item.error) {
+                    // Se houve erro
+                    htmlContent += `
+                        <tr>
+                            <td>${item.symbol}</td>
+                            <td colspan="3" class="error">${item.error}</td>
+                        </tr>
+                    `;
+                } else {
+                    // Se os dados vieram corretamente
+                    const changeClass = item.changePercent >= 0 ? 'positiva' : 'negativa';
+                    const changeText = `${item.changePercent.toFixed(2)}%`;
+                    
+                    htmlContent += `
+                        <tr>
+                            <td>${item.symbol}</td>
+                            <td>${item.currentPrice}</td>
+                            <td class="${changeClass}">${changeText}</td>
+                            <td>${item.previousClose}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            tbody.innerHTML = htmlContent;
+        }
+
+        // Inicia a busca
+        getAllQuotes();
+    </script>
+</body>
+</html>
