@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,26 @@
     <link rel="stylesheet" href="../css/loja.css">
     <title>Loja</title>
 </head>
+
 <body>
-  <header class="header-lobby">
-        <button id="voltar">Voltar para o Lobby</button>
-        <h1>StarterCash</h1>
+    <header class="header-lobby">
+        <button id="voltar" style="
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 14px rgba(0,0,0,0.2)'"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.15)'">
+            Voltar para o Lobby
+        </button>
+
+        <!-- <h1>Loja</h1> -->
 
         <div class="user-box">
             <img src="../assets/aury.png" alt="Avatar do Usuário">
@@ -30,12 +47,72 @@
         </div>
     </header>
 
+    <section class="shop-section">
+  <h2 class="shop-title">Loja</h2>
+  <p class="shop-subtitle">
+    Troque seus pontos por itens exclusivos.
+  </p>
+
+  <div class="shop-grid">
+
+    <div class="shop-card">
+      <!-- <img src="https://via.placeholder.com/300x220" alt="Camiseta Básica"> -->
+      <h3>Camiseta StarterCash</h3>
+      <p class="item-category">Vestuário</p>
+      <span class="item-price">120 Coins</span>
+      <button>Comprar</button>
+    </div>
+
+    <div class="shop-card">
+      <!-- <img src="https://via.placeholder.com/300x220" alt="Moletom"> -->
+      <h3>Moletom Neon</h3>
+      <p class="item-category">Vestuário</p>
+      <span class="item-price">280 Coins</span>
+      <button>Comprar</button>
+    </div>
+
+    <div class="shop-card">
+      <!-- <img src="https://via.placeholder.com300x220" alt="Boné"> -->
+      <h3>Boné Starter</h3>
+      <p class="item-category">Acessório</p>
+      <span class="item-price">90 Coins</span>
+      <button>Comprar</button>
+    </div>
+
+    <div class="shop-card">
+      <!-- <img src="https://via.placeholder.com/300x220" alt="Tênis"> -->
+      <h3>Tênis Urbano</h3>
+      <p class="item-category">Vestuário</p>
+      <span class="item-price">450 Coins</span>
+      <button>Comprar</button>
+    </div>
+
+    <div class="shop-card">
+      <!-- <img src="https://via.placeholder.com/300x220" alt="Mochila"> -->
+      <h3>Mochila Finance</h3>
+      <p class="item-category">Acessório</p>
+      <span class="item-price">320 Coins</span>
+      <button>Comprar</button>
+    </div>
+
+    <div class="shop-card">
+      <!-- <img src="https://via.placeholder.com/300x220" alt="Jaqueta"> -->
+      <h3>Jaqueta Street</h3>
+      <p class="item-category">Vestuário</p>
+      <span class="item-price">520 Coins</span>
+      <button>Comprar</button>
+    </div>
+
+  </div>
+</section>
+
 
     <div id="loading-overlay">
         <div class="spinner"></div>
         <p>Carregando...</p>
     </div>
-    
- <script type="module" src="../js/loja.js"></script>
+
+    <script type="module" src="../js/loja.js"></script>
 </body>
+
 </html>

@@ -11,8 +11,22 @@
 
 <body>
     <header class="header-lobby">
-        <button id="voltar">Voltar para o Lobby</button>
-        <h1>StarterCash</h1>
+        <button id="voltar" style="
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 14px rgba(0,0,0,0.2)'"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.15)'">
+            Voltar para o Lobby
+        </button>
+        <h1>Simuladores</h1>
 
         <div class="user-box">
             <img src="../assets/aury.png" alt="Avatar do Usuário">
@@ -31,6 +45,84 @@
             <p style="color: var(--color-xp);" id="userCoins">💰</p>
         </div>
     </header>
+    <div class="container">
+
+  <!-- CONSERVADOR -->
+  <section class="perfil conservador">
+    <h2>🟢 Perfil Conservador</h2>
+    <p>Para quem busca segurança e estabilidade.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Poupança</h3>
+        <p>Simples, segura, porém com rendimento baixo.</p>
+        <button onclick="abrirSimulador('POUPANCA')">Simular</button>
+      </div>
+
+      <div class="card">
+        <h3>CDB</h3>
+        <p>Rende mais que a poupança e é bastante seguro.</p>
+        <button onclick="abrirSimulador('CDB')">Simular</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODERADO -->
+  <section class="perfil moderado">
+    <h2>🔵 Perfil Moderado</h2>
+    <p>Equilíbrio entre segurança e rentabilidade.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Tesouro IPCA+</h3>
+        <p>Protege seu dinheiro da inflação.</p>
+        <button onclick="abrirSimulador('IPCA')">Simular</button>
+      </div>
+
+      <div class="card">
+        <h3>Fundo Imobiliário</h3>
+        <p>Investimento em imóveis com renda mensal.</p>
+        <button onclick="abrirSimulador('FII')">Simular</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARROJADO -->
+  <section class="perfil arrojado">
+    <h2>🟣 Perfil Arrojado</h2>
+    <p>Para quem aceita riscos em busca de maior retorno.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Bitcoin</h3>
+        <p>Alta volatilidade e alto potencial de ganho.</p>
+        <button onclick="abrirSimulador('BTC')">Simular</button>
+      </div>
+
+      <div class="card">
+        <h3>Ethereum</h3>
+        <p>Criptomoeda com grande uso em tecnologia.</p>
+        <button onclick="abrirSimulador('ETH')">Simular</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3 id="modalTitle"></h3>
+    <p id="modalDesc"></p>
+
+    <input type="number" id="valor" placeholder="Valor a investir (R$)">
+    <input type="number" id="meses" placeholder="Tempo (meses)">
+
+    <button class="btn-simular" onclick="simular()">Simular</button>
+    <button class="btn-fechar" onclick="fechar()">Fechar</button>
+
+    <div class="result" id="resultado" style="display:none;"></div>
+  </div>
+</div>
 
 
     <div id="loading-overlay">

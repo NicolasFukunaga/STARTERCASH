@@ -9,8 +9,22 @@
 </head>
 <body>
   <header class="header-lobby">
-        <button id="voltar">Voltar para o Lobby</button>
-        <h1>StarterCash</h1>
+        <button id="voltar" style="
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 14px rgba(0,0,0,0.2)'"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.15)'">
+            Voltar para o Lobby
+        </button>
+        <!-- <h1>Cursos</h1> -->
 
         <div class="user-box">
             <img src="../assets/aury.png" alt="Avatar do Usuário">
@@ -29,6 +43,47 @@
             <p style="color: var(--color-xp);" id="userCoins">💰</p>
         </div>
     </header>
+
+    <section class="courses-section">
+  <h2 class="courses-title">Cursos Disponíveis</h2>
+  <p class="courses-subtitle">
+    Aprenda a dominar seu dinheiro como se estivesse jogando.
+  </p>
+
+  <div class="courses-grid">
+    
+    <div class="course-card">
+      <span class="course-level">Iniciante</span>
+      <h3>Missão: Controle Financeiro</h3>
+      <p>
+        Aprenda a organizar sua vida financeira, entender gastos e
+        assumir o controle do seu dinheiro.
+      </p>
+      <button>Iniciar Missão</button>
+    </div>
+
+    <div class="course-card">
+      <span class="course-level">Intermediário</span>
+      <h3>Desafio: Orçamento Inteligente</h3>
+      <p>
+        Crie estratégias para economizar, planejar metas e evitar
+        armadilhas financeiras do dia a dia.
+      </p>
+      <button>Entrar no Desafio</button>
+    </div>
+
+    <div class="course-card">
+      <span class="course-level">Avançado</span>
+      <h3>Level Up: Investimentos</h3>
+      <p>
+        Entenda investimentos, renda fixa, renda variável e como
+        fazer o dinheiro trabalhar pra você.
+      </p>
+      <button>Subir de Nível</button>
+    </div>
+
+  </div>
+</section>
 
 
     <div id="loading-overlay">

@@ -9,8 +9,22 @@
 </head>
 <body>
  <header class="header-lobby">
-        <button id="voltar">Voltar para o Lobby</button>
-        <h1>StarterCash</h1>
+        <button id="voltar" style="
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 14px rgba(0,0,0,0.2)'"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.15)'">
+            Voltar para o Lobby
+        </button>
+        <h1>Passe</h1>
 
         <div class="user-box">
             <img src="../assets/aury.png" alt="Avatar do Usuário">
@@ -29,6 +43,47 @@
             <p style="color: var(--color-xp);" id="userCoins">💰</p>
         </div>
     </header>
+
+    <section class="planos" id="planos">
+    <h2>Escolha seu plano</h2>
+
+    <div class="planos-container">
+
+        <div class="plano-card">
+            <h3>Essential</h3>
+            <p class="preco">R$ 0,00</p>
+            <ul>
+                <li>Acesso às aulas iniciais</li>
+                <li>Missões básicas</li>
+                <li>Sem limite de tempo</li>
+            </ul>
+            <!-- <a href="#" class="btn-outline">Matricule-se</a> -->
+        </div>
+
+        <div class="plano-card destaque">
+            <h3>Plus</h3>
+            <p class="preco">R$ 19,90/mês</p>
+            <ul>
+                <li>Tudo do Essential</li>
+                <li>Cursos intermediários</li>
+                <li>Certificados</li>
+            </ul>
+            <!-- <a href="#" class="btn-primary">Matricule-se</a> -->
+        </div>
+
+        <div class="plano-card">
+            <h3>Pro</h3>
+            <p class="preco">R$ 39,90/mês</p>
+            <ul>
+                <li>Tudo do Plus</li>
+                <li>Mentorias</li>
+                <li>Acesso à Aury IA</li>
+            </ul>
+            <!-- <a href="#" class="btn-outline">Matricule-se</a> -->
+        </div>
+
+    </div>
+</section>
 
 
     <div id="loading-overlay">

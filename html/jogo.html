@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Coin Clicker</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #1e1e2f, #2b2b45);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .game {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      border-radius: 15px;
+      width: 300px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    .coin {
+      width: 120px;
+      height: 120px;
+      background: gold;
+      border-radius: 50%;
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s ease;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    }
+
+    .coin:active {
+      transform: scale(0.9);
+    }
+
+    .game-over {
+      display: none;
+      margin-top: 20px;
+      font-size: 20px;
+      color: #ff6b6b;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #4caf50;
+      color: white;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #43a047;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game">
+    <h1>🪙 Coin Clicker</h1>
+
+    <div class="stats">
+      <div>Coins: <span id="coins">0</span></div>
+      <div>⏱️ <span id="time">30</span>s</div>
+    </div>
+
+    <div class="coin" id="coin">💰</div>
+
+    <div class="game-over" id="gameOver">
+      ⛔ Tempo acabou! <br>
+      Total de coins: <strong id="finalCoins">0</strong>
+    </div>
+
+    <a href="./lobby.html"  style="
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 14px rgba(0,0,0,0.2)'"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.15)'">Voltar pro lobby!</a>
+  </div>
+
+  <script>
+    let coins = 0;
+    let timeLeft = 15;
+    let timer = null;
+    let gameActive = true;
+
+    const coinsEl = document.getElementById("coins");
+    const timeEl = document.getElementById("time");
+    const coinEl = document.getElementById("coin");
+    const gameOverEl = document.getElementById("gameOver");
+    const finalCoinsEl = document.getElementById("finalCoins");
+
+    function startTimer() {
+      timer = setInterval(() => {
+        timeLeft--;
+        timeEl.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame() {
+      clearInterval(timer);
+      gameActive = false;
+      coinEl.style.pointerEvents = "none";
+      gameOverEl.style.display = "block";
+      finalCoinsEl.textContent = coins;
+    }
+
+    coinEl.addEventListener("click", () => {
+      if (!gameActive) return;
+
+      coins++;
+      coinsEl.textContent = coins;
+    });
+
+    function restartGame() {
+      coins = 0;
+      timeLeft = 15;
+      gameActive = true;
+
+      coinsEl.textContent = coins;
+      timeEl.textContent = timeLeft;
+      gameOverEl.style.display = "none";
+      coinEl.style.pointerEvents = "auto";
+
+      clearInterval(timer);
+      startTimer();
+    }
+
+    // inicia o jogo
+    startTimer();
+  </script>
+
+</body>
+</html>
